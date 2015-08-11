@@ -3,11 +3,11 @@
 //#include "GameObject.h"
 #include <random>
 #include <time.h>
-/*
+
 Vector2 Seek::Update(Agents* agent)
 {
 	Vector2 seek(0.0f, 0.0f);
-	seek = (seek.Normalised(*target - agent->m_position) * agent->m_acceleration) - agent->m_velocity;
+	seek = ((*target - agent->m_position).Normalised() * agent->m_acceleration) - agent->m_velocity;
 	return seek;
 }
 
@@ -16,7 +16,7 @@ void Seek::SetTarget(Vector2* a_target)
 	this->target = a_target;
 }
 
-
+/*
 Vector2 Flee::Update(Agents* agent)
 {
 	Vector2 flee(0.0f, 0.0f);

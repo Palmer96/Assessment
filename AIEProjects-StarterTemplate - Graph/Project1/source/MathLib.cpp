@@ -129,11 +129,11 @@ float Vector2::Magnitude()
 {
 	return sqrt((x * x) + (y * y));
 }
-Vector2 Normalised(Vector2 a)
+Vector2 Vector2::Normalised()
 {
-	a.x /= a.Magnitude();
-	a.y /= a.Magnitude();
-	return a;
+	x /= Magnitude();
+	y /= Magnitude();
+	return Vector2 (x, y);
 }
 
 

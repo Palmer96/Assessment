@@ -4,6 +4,7 @@
 #include "MathLib.h"
 #include "IBehaviour.h"
 #include "Texture.h"
+#include "Graph.h"
 
 
 
@@ -29,11 +30,14 @@ public:
 	std::vector < IBehaviour * > m_behaviours;
 
 	Texture * personTex;
+
 	Vector2 m_position;
 	Vector2 m_velocity;
 	Vector2 m_acceleration;
 	Vector2 m_force;
 
+
+	Node* closestNode;
 
 
 };

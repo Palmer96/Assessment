@@ -13,7 +13,7 @@ public:
 	float FloVec(Vector2 a, float Float);
 	float Dot(Vector2 a_1, Vector2 a_2);
 	float Magnitude();
-	Vector2 Normalised(Vector2 a);
+	Vector2 Normalised();
 
 
 	bool EqualVector(Vector2 v1, Vector2 v2);

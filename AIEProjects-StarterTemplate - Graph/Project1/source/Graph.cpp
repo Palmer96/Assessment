@@ -104,92 +104,6 @@ void Graph::DrawCircle(SpriteBatch& a_spriteBatch, Vector2 pos, float radius)
 
 
 
-/*
-void Graph::Dijkstras()
-{
-for (int i = 0; i < nodes.size(); i++)
-{
-if (nodes[i]->bIsStart = true)
-{
-startNode = nodes[i];
-}
-if (nodes[i]->bIsEnd = true)
-{
-endNode = nodes[i];
-}
-}
-nodeQueue.push_back(startNode);
-
-Vector2 distance;
-
-Node* currentNode = nodeQueue[0];
-Node* shortest;
-Node* smallest;
-
-bool bSorted = false;
-int count = 0;
-
-while (true)
-{
-count = 0;
-smallest = nodeQueue[0];
-for (int j = 0; j < nodeQueue.size(); j++)
-{
-if (nodeQueue[j]->travelCost < smallest->travelCost)
-{
-smallest = nodeQueue[j];
-count = j;
-}
-}
-
-currentNode = smallest;
-
-if (currentNode == endNode)
-{
-break;
-}
-
-for (int i = 0; i < currentNode->edges.size(); i++)
-{
-distance.x = currentNode->edges[i]->end->data.x - currentNode->data.x;
-distance.y = currentNode->edges[i]->end->data.y - currentNode->data.y;
-
-if ((distance.Magnitude() + currentNode->travelCost) < currentNode->edges[i]->end->travelCost)
-{
-currentNode->edges[i]->end->travelCost = (distance.Magnitude() + currentNode->travelCost);
-currentNode->edges[i]->end->previous = currentNode;
-}
-if (currentNode->edges[i]->end->traversed == false)
-{
-nodeQueue.push_back(currentNode->edges[i]->end);
-currentNode->edges[i]->end->traversed = true;
-}
-currentNode->edges[i]->color.x = 0;
-currentNode->edges[i]->color.y = 0;
-currentNode->edges[i]->color.z = 255;
-}
-nodeQueue.erase(nodeQueue.begin() + count);
-}
-
-while (currentNode != startNode)
-{
-currentNode->color.x = 255;
-currentNode->color.y = 0;
-currentNode->color.z = 0;
-for (int i = 0; i < currentNode->edges.size(); i++)
-{
-if (currentNode->edges[i]->end = currentNode->previous)
-{
-currentNode->color.x = 0;
-currentNode->color.y = 255;
-currentNode->color.z = 0;
-}
-}
-currentNode = currentNode->previous;
-}
-}
-*/
-
 bool SortByG(Node* a, Node* b)
 {
 	return a->G > b->G;
@@ -283,7 +197,6 @@ std::vector<Vector2> Graph::Dijkstras(Node* a_startNode, Node* a_endNode)
 Node* Graph::ClosestNode(Vector3 Pos)
 {
 	Node* currentNode = nullptr;
-	//currentNode->data.Magnitude() = 200.0f;
 		Vector2 aPos(Pos.x, Pos.y);
 		float minDistance = std::numeric_limits<float>::max();
 
@@ -298,5 +211,38 @@ Node* Graph::ClosestNode(Vector3 Pos)
 
 	}
 	return currentNode;
+
+}
+
+Node* Graph::ClosestNode(Vector2 Pos)
+{
+	Node* currentNode = nullptr;
+	float minDistance = std::numeric_limits<float>::max();
+
+	for (int i = 0; i < nodes.size(); i++)
+	{
+
+		if ((Pos - nodes[i]->data).Magnitude() < minDistance)
+		{
+			currentNode = nodes[i];
+			minDistance = (Pos - nodes[i]->data).Magnitude();
+		}
+
+	}
+	return currentNode;
+
+}
+
+Vector2 Graph::SafeRandPos()
+{
+	Vector2 randPos(rand() % 1190 + 10, rand() % 790 + 10);
+	if (ClosestNode(randPos)->transversable)
+	{
+		return randPos;
+	}
+	else
+	{
+		return SafeRandPos();
+	}
 
 }

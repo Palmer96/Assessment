@@ -13,7 +13,7 @@
 
 
 Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscreen, const char *title) : Application(windowWidth, windowHeight, fullscreen, title)
-{
+{//-------------------------------------------------------------------------------------------------------------------------------------------//
 	m_spritebatch = SpriteBatch::Factory::Create(this, SpriteBatch::GL3);
 	m_spritebatch->SetColumnMajor(true);
 	pGraph = new Graph();
@@ -22,12 +22,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 
 
 
-	//---------------------------------------------------------------//
-
-	//				COMBINE THE TWO
-
-	// so that only add Nodes when they would be transversable
-
+	//-----------------------< Create Nodes >-------------------------//
 	int count = 0;
 	int count2 = 0;
 	for (int i = 20; i <= 780; i += 20)//39
@@ -37,9 +32,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 			pGraph->AddNode(Vector2(j, i));
 		}
 	}
-
-
-
+	//-----------------------< Create Edges >-------------------------//
 	for (int j = 0; j < 2264; j += 59)
 	{
 		for (int i = 0; i < 58; i++)
@@ -48,8 +41,6 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 			pGraph->AddEdge(pGraph->nodes[i + j + 1], pGraph->nodes[i + j], 1);
 		}
 	}
-
-
 	for (int j = 0; j < 2205; j += 59)
 	{
 		for (int i = 0; i < 59; i++)
@@ -58,9 +49,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 			pGraph->AddEdge(pGraph->nodes[i + j + 59], pGraph->nodes[i + j], 1);
 		}
 	}
-
-
-
+	//-----------------------< Set Untraversable Nodes >-------------------------//
 	for (int j = 241; j < 2300; j += 9)
 	{
 		count++;
@@ -80,11 +69,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 			j += 295;
 		}
 	}
-
-	//---------------------------------------------------------------//
-
-	pGraph->nodes[0]->bIsStart = true;
-	pGraph->nodes[1300]->bIsEnd = true;
+	//-----------------------< Set Variables >-------------------------//
 
 	pGraph->ActivateDijkstras = false;
 
@@ -100,11 +85,9 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 		0.0f, playerPos.y, 0.0f,
 		0.0f, 0.0f, 1.0f);
 
-
+	policePos = Vector2(500.0f, 20.0f);
 	agentPos = Vector2(100.0f, 100.0f);
-	//agentPos = Vector2(pGraph->nodes[5]->data.x, pGraph->nodes[5]->data.y);
 	rotate = 0.0f;
-	//person = Agents(agentPos);
 
 	scale = Vector3(1.0f, 1.0f, 1.0f);
 
@@ -127,70 +110,102 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	//blood[i]->Alpha
 
 	counter = 0;
+
+	for (int i = 0; i <= 10; i++)
+	{
+		agent.push_back(new Agents);
+		agent[i]->m_position = pGraph->SafeRandPos();
+		//agent[i]->m_position = pGraph->SafeRandPos();
+	}
+	//		for (int i = 0; i < agent.size(); i++)
+	//		{
+	//			agent[i]->m_position = pGraph->SafeRandPos();
+	//		}
 }
 
-Game1::~Game1()
+Game1::~Game1()//-------------------------------------------------------------------------------------------------------------------------------------------------------------//
 {
 	SpriteBatch::Factory::Destroy(m_spritebatch);
 }
 
 
-void Game1::Update(float deltaTime)
+void Game1::Update(float deltaTime)//-------------------------------------------------------------------------------------------------------------------------------------------//
 {
-	Input * InputManager = GetInput();
-	//-----------------// Dijkstras //-----------------//
 
+	Input * InputManager = GetInput();
+	//-----------------------< Dijkstras >-------------------------//
+	system("cls");
 
 	int count = 0;
 	int count2 = 0;
 
+	std::cout << (agentPos.Magnitude() - pGraph->ClosestNode(playerPos)->data.Magnitude()) << std::endl;
 
-
-
-
-	//	if (InputManager->WasKeyPressed(GLFW_KEY_SPACE))  
+	//if ((agentPos.Magnitude() - pGraph->ClosestNode(playerPos)->data.Magnitude()) < 10.0f)
+	if (pGraph->ClosestNode(playerPos) == pGraph->ClosestNode(agentPos))
 	{
-	//	for (int i = 0; i < 200; i++)
-
-	//		pGraph->nodes[rand() % 2281 + 10]->transversable = false;
-		Path = pGraph->Dijkstras(pGraph->nodes[0], pGraph->ClosestNode(playerPos));
-		/*
-		Path2 = pGraph->Dijkstras(pGraph->nodes[856], pGraph->nodes[rand() % 2300]);
-		Path3 = pGraph->Dijkstras(pGraph->nodes[856], pGraph->nodes[rand() % 2300]);
-		Path4 = pGraph->Dijkstras(pGraph->nodes[856], pGraph->nodes[rand() % 2300]);
-		Path5 = pGraph->Dijkstras(pGraph->nodes[856], pGraph->nodes[rand() % 2300]);
-		*/
+		//Node* corpse = pGraph->ClosestNode(agentPos);
+		Path = pGraph->Dijkstras(pGraph->ClosestNode(policePos), pGraph->ClosestNode(agentPos));
 		pGraph->ActivateDijkstras = true;
 	}
-		if (InputManager->WasKeyPressed(GLFW_KEY_R))
-	{
-		for (int j = 0; j < 2300; j++)
-		{
-			pGraph->nodes[j]->transversable = true;
-		}
 
-		//	pGraph->ActivateDijkstras = false;
-	}
-	for (int j = 241; j < 2300; j += 9)
+	for (int i = 0; i < agent.size(); i++)
 	{
-		count++;
-		for (int i = j; i < j + 4; i++)
-		{
-			pGraph->nodes[i]->transversable = false;
-		}
-		if (count == 6)
-		{
-			count = 0;
-			count2++;
-			j += 5;
-		}
-		if (count2 == 4)
-		{
-			count2 = 0;
-			j += 295;
-		}
+		agent[i]->Update(deltaTime);
+
+		//	agent[i]->closestNode = pGraph->ClosestNode(agent[i]->m_position);
 	}
-	//-----------------// Steering //-----------------//
+	std::cout << agent[1]->m_position.x << ", " << agent[1]->m_position.x << std::endl;
+	//agent[0]->m_position *= agent[50]->m_position* deltaTime;
+
+
+	//for (int i = 0; i < agent.size(); i++)
+	//{
+	//	if (pGraph->ClosestNode(playerPos) == pGraph->ClosestNode(agent[i]->m_position))
+	//	{
+	//		agent[i]->m_position = pGraph->SafeRandPos();
+	//	}
+	//}
+
+	if (pGraph->ActivateDijkstras == false)
+	{
+		Path = pGraph->Dijkstras(pGraph->nodes[0], pGraph->nodes[2300]);
+		pGraph->ActivateDijkstras = true;
+	}
+	if (InputManager->WasKeyPressed(GLFW_KEY_SPACE))
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			pGraph->nodes[rand() % pGraph->nodes.size()]->transversable = false;
+			k = 0;
+		}
+		Path = pGraph->Dijkstras(pGraph->nodes[0], pGraph->nodes[2300]);
+	}
+	std::cout << Path[Path.size() - 1].x << ", " << Path[Path.size() - 1].y << std::endl;
+	//for (int i = 0; i < agent.size(); i++)
+	//{
+		//if (k != Path.size() - 1)
+		if (pGraph->ClosestNode(agent[0]->m_position) == pGraph->ClosestNode(Path[Path.size() - 1]))
+		{
+			{
+				for (int i = 0; i < 100; i++)
+				{
+					pGraph->nodes[rand() % pGraph->nodes.size()]->transversable = false;
+					k = 0;
+				}
+				Path = pGraph->Dijkstras(pGraph->nodes[0], pGraph->nodes[2300]);
+			}
+		}
+		agent[0]->m_position += (Path[k] - agent[0]->m_position).Normalised() * 10 * deltaTime;
+
+		if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(agent[0]->m_position))
+		{
+			k++;
+		}
+//	}
+
+
+	//-----------------------< Steering >-------------------------//
 
 	Vector3 upVec = Vector3(playerMat.a12, playerMat.a11, 1.0);
 	Vector3 normVec = upVec.Normalised();
@@ -229,61 +244,9 @@ void Game1::Update(float deltaTime)
 	}
 
 	playerMat = playerMat.Translation(playerPos) *  playerMat.Rotation(rotate) * playerMat.Scale(scale);
-	//------------------------------------------------//
-	Vector2 temp = pGraph->ClosestNode(playerPos)->data;
-	std::cout << temp.x << ", " << temp.y << std::endl;
-	//std::cout << pGraph->ClosestNode(playerPos)->data.x << ", " << pGraph->ClosestNode(playerPos)->data.y << std::endl;
-	//			if (pGraph->ActivateDijkstras = true)
-	//			{
-	//				agentPos += Path[1000] * 10.0f * deltaTime;
-	//			
-	//				if ((agentPos.Magnitude() - Path[k].Magnitude()) <= 2.0f)
-	//				//if ((((agentPos - Path[k]).Magnitude())) <= 2.0f)
-	//				{
-	//					k++;
-	//				}
-	//			
-	//				if (k = 2000)
-	//				{
-	//					k = 0;
-	//				}
-	//			
-	//			
-	//			
-	//				for (int i = 0; i < Path.size() - 1; i++)
-	//				{
-	//					m_spritebatch->DrawLine(Path[k].x, Path[k].y, Path[k + 1].x, Path[k + 1].y, 4.0f);
-	//				}
-	//				if (k == Path.size() - 1)
-	//				{
-	//					k = 0;
-	//				}
-	//			
-	//			
-	//			
-	//			}
-
-	//agentPos = pGraph->ClosestNode(playerPos)->data;
-
-	//	if (fTimer > 0.01)
-	//	{
-	//		playerDistance.x = (playerPos.x - follower[0].coords.x);
-	//		playerDistance.y = (playerPos .y - follower[0].coords.y);
-	//		Length = playerDistance.Length();
-	//		if (Length > fPastLength)
-	//		{
-	//			trail[0].coords.x = playerPos.x;
-	//			trail[0].coords.y = playerPos.y;
-	//		}
-	//		if (Length < fPastLength)
-	//		{
-	//			trail[1].coords.x = playerPos.x;
-	//			trail[1].coords.y = playerPos.y;
-	//		}
-	//		fPastLength = Length;
-	//	}
 
 
+	//-----------------------< Blood Trail >-------------------------//
 	if (fTimer > 0.01)
 	{
 		blood[counter]->Pos.x = playerPos.x;
@@ -303,7 +266,7 @@ void Game1::Update(float deltaTime)
 	//												person.Update(deltaTime);
 }
 
-void Game1::Draw()
+void Game1::Draw()//-------------------------------------------------------------------------------------------------------------------------------------------//
 {
 	// clear the back buffer
 	ClearScreen();
@@ -385,8 +348,12 @@ void Game1::Draw()
 	m_spritebatch->SetRenderColor(255, 255, 255, 255);
 
 	m_spritebatch->DrawSpriteTransformed3x3(playerTex, playerMat.GetMatrix(), 25.0f, 75.0f);
-	m_spritebatch->DrawSprite(personTex, agentPos.x, agentPos.x, 10.0f, 10.0f);
-
+	m_spritebatch->DrawSprite(personTex, agentPos.x, agentPos.y, 10.0f, 10.0f);
+	for (int i = 0; i < agent.size(); i++)
+	{
+		m_spritebatch->DrawSprite(personTex, agent[i]->m_position.x, agent[i]->m_position.y, 50.0f, 50.0f);
+	}
+	m_spritebatch->DrawSprite(personTex, policePos.x, policePos.y, 10.0f, 10.0f);
 	m_spritebatch->End();
 
 }

@@ -9,6 +9,7 @@ Description:
 #include "Application.h"
 #include "Graph.h"
 #include "Blood.h"
+#include "Agents.h"
 
 
 
@@ -41,12 +42,12 @@ protected:
 
 
 	std::vector <Vector2> Path;
-	//*
+	/*
 	std::vector <Vector2> Path2;
 	std::vector <Vector2> Path3;
 	std::vector <Vector2> Path4;
 	std::vector <Vector2> Path5;
-	//*/
+	*/
 
 	Graph *pGraph;
 
@@ -61,11 +62,13 @@ protected:
 	float rotate;
 	Vector3 scale;
 
+	Vector2 policePos;
 	Vector2 agentPos;
 
 	float k;
 
 	std::vector<Blood*> blood;
+	std::vector<Agents*> agent;
 
 
 	float fTimer;

@@ -68,11 +68,12 @@ public:
 	//void Dijkstras();
 	std::vector<Vector2> Dijkstras(Node* a_startNode, Node* a_endNode);
 	bool ActivateDijkstras;
-	int CheapestNode();
 	//bool SortByG(Node* a, Node* b);
 
+	Vector2 SafeRandPos();
+
 	Node* ClosestNode(Vector3);
-	
+	Node* ClosestNode(Vector2);
 
 	Node* startNode;
 	Node* endNode;
