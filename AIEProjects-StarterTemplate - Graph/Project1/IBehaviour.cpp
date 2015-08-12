@@ -6,9 +6,7 @@
 
 Vector2 Seek::Update(Agents* agent)
 {
-	Vector2 seek(0.0f, 0.0f);
-	seek = ((*target - agent->m_position).Normalised() * agent->m_acceleration) - agent->m_velocity;
-	return seek;
+ return ((*target - agent->m_position).Normalised() * agent->m_acceleration) - agent->m_velocity;
 }
 
 void Seek::SetTarget(Vector2* a_target)
@@ -19,11 +17,10 @@ void Seek::SetTarget(Vector2* a_target)
 /*
 Vector2 Flee::Update(Agents* agent)
 {
-	Vector2 flee(0.0f, 0.0f);
-	flee = (flee.Normalised(agent->m_position - *target) * agent->m_acceleration) - agent->m_velocity;
-	return flee;
-}
+	return (agent->m_position.VecFlo(agent->m_acceleration, (agent->m_position - *target).Normalised() ) - agent->m_velocity);
 
+}
+*/
 void Flee::SetTarget(Vector2* a_target)
 {
 	this->target = a_target;
@@ -35,8 +32,8 @@ Vector2 Wander::Update(Agents* agent)
 {
 	circle = agent->m_velocity;
 
-	if ((circle.EqualVector(circle, Vector2(0.0f, 0.0f)) == false))
-		circle.Normalised(circle);
+	if ((circle.EqualVector(Vector2(0.0f, 0.0f)) == false))
+		circle.Normalised();
 
 
 	circle = circle.VecFlo(circle, distance);
@@ -47,19 +44,18 @@ Vector2 Wander::Update(Agents* agent)
 	displacement.x = cos(angle) * radius;
 	displacement.y = sin(angle) * radius;
 
-	return ((circle.Normalised(circle + displacement) * agent->m_acceleration) - agent->m_velocity);
+	return ((agent->m_acceleration * (circle + displacement).Normalised()) - agent->m_velocity);
 
 }
 
 
-
-
 /*
+
+
 	Vector2 Pursue::Update(Agents* agent)
 	{
-		Vector2 pursue(0.0f, 0.0f);
-		pursue = (pursue.Normalised(target->m_position + target->AI->m_velocity - agent->m_position) * agent->m_acceleration) - agent->m_velocity;
-		return pursue;
+		
+		return ((target->m_position + target->AI->m_velocity - agent->m_position) * agent->m_acceleration).Normalised - agent->m_velocity;
 	}
 	void Pursue::SetTarget(GameObject* a_target)
 	{
@@ -69,7 +65,7 @@ Vector2 Wander::Update(Agents* agent)
 	
 	Vector2 Evade::Update(Agents* agent)
 	{
-		return (Normalised(*agent->m_position - target->m_position + target->AI->m_velocity) * agent->m_acceleration) - agent->m_velocity;
+		return ((*agent->m_position - target->m_position + target->AI->m_velocity) * agent->m_acceleration).Normalised - agent->m_velocity;
 	}
 	void Evade::SetTarget(GameObject* a_target)
 	{
@@ -88,8 +84,8 @@ Vector2 Wander::Update(Agents* agent)
 	
 		if (scalar < 1)
 		{
-			seekForce *= scalar;
-			seekForce += (Normalised(agent->m_velocity) * -1) * Magnitude(agent->m_velocity) * Dot(dir, Normalised(agent->m_velocity)) * 2;
+			seekForce = seekForce.VecFlo(seekForce, scalar);
+			seekForce += ((agent->m_velocity).Normalised * -1) * (agent->m_velocity).Magnitude * dir.Dot(dir, (agent->m_velocity).Normalised) * 2;
 		}
 	
 		return seekForce - agent->m_velocity;
@@ -126,5 +122,6 @@ Vector2 Wander::Update(Agents* agent)
 	{
 		this->target = a_target;
 	}
+	
 	*/
 

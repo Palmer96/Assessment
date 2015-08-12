@@ -26,19 +26,19 @@ Agents::~Agents()
 
 void Agents::Update(float deltaTime)
 {
-	m_position += m_velocity;
-
-	if ((m_position.x < 800) ||
-		(m_position.y < 1200)||
-		(m_position.x > 0)	 ||
-		(m_position.x > 0))
-	{
-		m_velocity -= m_velocity.VecFlo(m_velocity, 2);
-	}
-	else
-	{
-		m_position -= m_velocity;
-	}
+////////		m_position += m_velocity;
+////////		
+////////		if ((m_position.x < 800) ||
+////////			(m_position.y < 1200)||
+////////			(m_position.x > 0)	 ||
+////////			(m_position.x > 0))
+////////		{
+////////			m_velocity -= m_velocity.VecFlo(m_velocity, 2);
+////////		}
+////////		else
+////////		{
+////////			m_position -= m_velocity;
+////////		}
 	//m_position += m_velocity;
 	// Sense
 		// check the environment
@@ -54,6 +54,7 @@ void Agents::Update(float deltaTime)
 
 //	m_velocity = Vector2(200.0f, 200.0f);
 //	m_force = Vector2(500.0f, 200.0f);
+
 
 	// Physics
 	AddForce();

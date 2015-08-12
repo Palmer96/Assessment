@@ -6,6 +6,17 @@
 //--------//	Vector 2D	//---------------------------------------------//
 //-------------------------------------------------------------------------//
 
+float Clamp(float value, float min, float max)
+{
+	if (value > max)
+		return max;
+	else if (value < min)
+		return min;
+	else
+		return value;
+}
+
+
 Vector2::Vector2()
 {
 	x = 0.0f;
@@ -21,9 +32,9 @@ Vector2::~Vector2()
 
 }
 
-bool Vector2::EqualVector(Vector2 v1, Vector2 v2)
+bool Vector2::EqualVector(Vector2 v2)
 {
-	if ((v1.x = v2.x) && (v1.y = v2.y))
+	if ((x == v2.x) && (y == v2.y))
 	{
 		return true;
 	}
@@ -114,13 +125,14 @@ Vector2 Vector2::VecFlo(Vector2 a, float Float)
 	a.y *= Float;
 	return a;
 }
+
 float Vector2::FloVec(Vector2 a, float Float)
 {
-	float a1 = Float * a.x;
-	float a2 = Float * a.y;
+	
 	return (Float * a.x) + (Float * a.y);
 
 }
+
 float Dot(Vector2 a_1, Vector2 a_2)
 {
 	return (a_1.x*a_2.x) + (a_1.y*a_2.y);
@@ -135,6 +147,17 @@ Vector2 Vector2::Normalised()
 	y /= Magnitude();
 	return Vector2 (x, y);
 }
+
+
+Vector2 Vector2::operator*(float rhs) const
+{
+	return Vector2(x * rhs, y * rhs);
+}
+
+//float Vector2::operator*(float lhs, const Vector2& v2)const
+//{
+//	return (lhs * v2.x) + (lhs * v2.y);
+//}
 
 
 //-------------------------------------------------------------------------//
@@ -395,11 +418,6 @@ Vector4 Normalised(Vector4 a, float magnitude)
 	a.q /= magnitude;
 
 	return a;
-}
-
-Vector2 Vector2::operator*(float rhs) const
-{
-	return Vector2(x*rhs, y*rhs);
 }
 
 //-------------------------------------------------------------------------//

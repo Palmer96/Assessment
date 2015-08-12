@@ -1,6 +1,7 @@
 #ifndef _MATHLIB_H
 #define _MATHLIB_H
 
+float Clamp(float value, float min, float max);
 
 class Vector2
 {
@@ -16,10 +17,12 @@ public:
 	Vector2 Normalised();
 
 
-	bool EqualVector(Vector2 v1, Vector2 v2);
+	bool EqualVector(Vector2 v2);
 
 //	bool operator<(const Vector2& v2) const;
 
+	//Vector2 operator*(const float& v2) const;
+	
 	Vector2 operator+(const Vector2& v2) const;
 	Vector2& operator+=(const Vector2& v2);
 
@@ -33,6 +36,8 @@ public:
 	Vector2& operator*=(const Vector2& v2);
 
 	Vector2 operator*(float rhs) const;
+	//float operator*(float lhs, const Vector2& v2) const;
+	float Clamp(float max, float min, float value);
 
 	float x;
 	float y;
