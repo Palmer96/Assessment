@@ -36,18 +36,13 @@ protected:
 	SpriteBatch *m_spritebatch;
 	Texture * playerTex;
 	Texture * personTex;
+	Texture * policeTex;
 	Texture * roadTex;
 	Texture * roofTex;
 	Texture * bloodTex;
 
 
 	std::vector <Vector2> Path;
-	/*
-	std::vector <Vector2> Path2;
-	std::vector <Vector2> Path3;
-	std::vector <Vector2> Path4;
-	std::vector <Vector2> Path5;
-	*/
 
 	Graph *pGraph;
 
@@ -57,7 +52,6 @@ protected:
 
 	Vector3 playerPos;
 	Matrix3 playerMat;
-
 
 	float rotate;
 	Vector3 scale;
