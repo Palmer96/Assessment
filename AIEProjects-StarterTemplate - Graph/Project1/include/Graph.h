@@ -23,7 +23,7 @@ public:
 	void AddEdge(Edge* a_edge);
 
 	bool traversed;
-	bool transversable;
+	bool traversable;
 	float N;
 	float G;
 

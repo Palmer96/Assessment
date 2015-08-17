@@ -22,7 +22,8 @@ public:
 	void AddAcceleration();
 
 
-
+	Wander* temp;
+	Seek* temp2;
 //protected:
 
 //	SpriteBatch *m_spritebatch;

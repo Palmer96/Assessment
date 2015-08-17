@@ -43,7 +43,7 @@ Node::Node()
 	bIsStart = false;
 	bIsEnd = false;
 
-	transversable = true;
+	traversable = true;
 	//node->data = data;
 }
 
@@ -55,7 +55,7 @@ Node::Node(Vector2 VecData)
 	bIsStart = false;
 	bIsEnd = false;
 
-	transversable = true;
+	traversable = true;
 
 
 }
@@ -149,7 +149,7 @@ std::vector<Vector2> Graph::Dijkstras(Node* a_startNode, Node* a_endNode)
 			Edge* currentEdge = currentNode->edges[i];
 
 
-			if (endNode->transversable != false)
+			if (endNode->traversable != false)
 			{
 				if (endNode->traversed != true)
 				{
@@ -236,7 +236,7 @@ Node* Graph::ClosestNode(Vector2 Pos)
 Vector2 Graph::SafeRandPos()
 {
 	Vector2 randPos(rand() % 1190 + 10, rand() % 790 + 10);
-	if (ClosestNode(randPos)->transversable)
+	if (ClosestNode(randPos)->traversable)
 	{
 		return randPos;
 	}

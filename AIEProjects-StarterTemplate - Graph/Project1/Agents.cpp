@@ -4,17 +4,27 @@
 
 Agents::Agents()
 {
-	m_acceleration = Vector2(100.0f, 100.0f);
+	m_acceleration = Vector2(0.5f, 0.5f);
+	//m_velocity = Vector2(200.0f, 200.0f);
+	//m_force = Vector2(500.0f, 200.0f);
+	Wander* temp = new Wander();
+	Seek* temp2 = new Seek();
+	m_behaviours.push_back(temp);
 }
 
 Agents::Agents(Vector2 Pos)
 {
-	Vector2 Vec(100.0f, 100.0f);
-	m_acceleration = Pos;
-	Seek* temp = new Seek();
-	temp->SetTarget(&Vec);
+	//Vector2 Vec(100.0f, 100.0f);
+	m_position = Pos;
+	Wander* temp = new Wander();
+	//temp->SetTarget(&Vec);
 
 	m_behaviours.push_back(temp);
+
+
+//	m_acceleration = Vector2(10.0f, 10.0f);
+//	m_velocity = Vector2(200.0f, 200.0f);
+//	m_force = Vector2(500.0f, 200.0f);
 
 }
 
@@ -26,20 +36,7 @@ Agents::~Agents()
 
 void Agents::Update(float deltaTime)
 {
-////////		m_position += m_velocity;
-////////		
-////////		if ((m_position.x < 800) ||
-////////			(m_position.y < 1200)||
-////////			(m_position.x > 0)	 ||
-////////			(m_position.x > 0))
-////////		{
-////////			m_velocity -= m_velocity.VecFlo(m_velocity, 2);
-////////		}
-////////		else
-////////		{
-////////			m_position -= m_velocity;
-////////		}
-	//m_position += m_velocity;
+		
 	// Sense
 		// check the environment
 
@@ -52,15 +49,14 @@ void Agents::Update(float deltaTime)
 	for (auto iter = m_behaviours.begin(); iter != m_behaviours.end(); iter++)
 		m_force += (*iter)->Update(this);
 
-//	m_velocity = Vector2(200.0f, 200.0f);
-//	m_force = Vector2(500.0f, 200.0f);
-
+	
+	//temp->Update();;
 
 	// Physics
-	AddForce();
-	AddVelocity();
-	AddAcceleration();
-
+		AddForce();
+		AddVelocity();
+		AddAcceleration();
+	// m_position += (m_velocity - m_position)  * deltaTime;
 }
 void Agents::Draw(Texture *personTex)
 {
