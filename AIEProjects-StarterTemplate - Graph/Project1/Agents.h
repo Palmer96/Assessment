@@ -22,8 +22,9 @@ public:
 	void AddAcceleration();
 
 
-	Wander* temp;
-	Seek* temp2;
+	Wander* wander;
+	Seek* seek;
+	Avoid* avoid;
 //protected:
 
 //	SpriteBatch *m_spritebatch;
@@ -42,64 +43,3 @@ public:
 
 
 };
-
-
-/*
-class IBehaviour
-{
-public:
-	IBehaviour();
-	~IBehaviour();
-
-	virtual void Update(Agents *pAgent);
-
-};
-
-
-
-class Seek : public IBehaviour
-{
-public:
-	Seek();
-	~Seek();
-
-
-
-	virtual void Update(Agents *pAgent);
-};
-
-class Wander : public IBehaviour
-{
-public:
-	Wander();
-	~Wander();
-
-
-
-	virtual void Update(Agents *pAgent);
-};
-
-class Flee : public IBehaviour
-{
-public:
-	Flee();
-	~Flee();
-
-
-
-	virtual void Update(Agents *pAgent);
-};
-
-class Pursue : public IBehaviour
-{
-public:
-	Pursue();
-	~Pursue();
-
-
-
-	virtual void Update(Agents *pAgent);
-};
-
-
-*/

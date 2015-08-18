@@ -68,10 +68,12 @@ protected:
 	float fTimer;
 
 	int counter;
+	int counter2;
 	int Alpha;
 
-	int counter2;
+	
 
+	bool bBloodTrail;
 
 
 private:

@@ -4,7 +4,7 @@
 
 Agents::Agents()
 {
-	m_acceleration = Vector2(0.5f, 0.5f);
+	m_acceleration = Vector2(2.0f, 2.0f);
 	//m_velocity = Vector2(200.0f, 200.0f);
 	//m_force = Vector2(500.0f, 200.0f);
 	Wander* temp = new Wander();
@@ -49,14 +49,14 @@ void Agents::Update(float deltaTime)
 	for (auto iter = m_behaviours.begin(); iter != m_behaviours.end(); iter++)
 		m_force += (*iter)->Update(this);
 
-	
+	 m_position += ((m_velocity + m_force)) * m_acceleration * deltaTime;
 	//temp->Update();;
 
 	// Physics
-		AddForce();
-		AddVelocity();
-		AddAcceleration();
-	// m_position += (m_velocity - m_position)  * deltaTime;
+	//	AddForce();
+	//	AddVelocity();
+	//	AddAcceleration();
+	
 }
 void Agents::Draw(Texture *personTex)
 {

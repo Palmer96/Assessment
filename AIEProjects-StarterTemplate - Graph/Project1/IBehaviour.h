@@ -92,7 +92,7 @@ public:
 	void SetTarget(Vector2* target);
 
 };
-
+*/
 class Avoid : public IBehaviour
 {
 	Vector2* target;
@@ -106,4 +106,3 @@ public:
 
 };
 
-*/

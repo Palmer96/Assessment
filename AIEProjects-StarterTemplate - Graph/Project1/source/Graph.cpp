@@ -188,8 +188,6 @@ std::vector<Vector2> Graph::Dijkstras(Node* a_startNode, Node* a_endNode)
 	}
 	std::reverse(Path.begin(), Path.end());
 
-	//Path[5];
-
 	return Path;
 
 }

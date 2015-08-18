@@ -98,23 +98,23 @@ Vector2 Wander::Update(Agents* agent)
 	}
 	
 	
-	
+
 	Vector2 Avoid::Update(Agents* agent)
 	{
-		//Vector2 dir = Normalised(*target - *agent->m_position);
-		//float dist = Magnitude(*target - *agent->m_position);
-		//
-		//Vector2 seekForce = dir * agent->m_acceleration;
-		//
-		//float scalar = Clamp(dist / 100.0f, std::numeric_limits<float>::min(), 1);
-		//
-		//if (scalar < 1)
-		//{
-		//	seekForce *= scalar;
-		//	seekForce += (Normalised(agent->m_velocity) * -1) * Magnitude(agent->m_velocity) * Dot(dir, Normalised(agent->m_velocity)) * 2;
-		//}
-		//
-		//return seekForce - agent->m_velocity;
+		Vector2 dir = (*target - *agent->m_position).Normalised;
+		float dist = (*target - *agent->m_position).Magnitude;
+		
+		Vector2 seekForce = dir * agent->m_acceleration;
+		
+		float scalar = Clamp(dist / 100.0f, std::numeric_limits<float>::min(), 1);
+		
+		if (scalar < 1)
+		{
+			seekForce *= scalar;
+			seekForce += ((agent->m_velocity).Normalised * -1) * (agent->m_velocity).Magnitude * Dot(dir, (agent->m_velocity).Normalised) * 2;
+		}
+		
+		return seekForce - agent->m_velocity;
 		return Vector2();
 	
 	};
@@ -122,6 +122,6 @@ Vector2 Wander::Update(Agents* agent)
 	{
 		this->target = a_target;
 	}
+*/		
 	
-	*/
 

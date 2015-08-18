@@ -18,7 +18,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	m_spritebatch->SetColumnMajor(true);
 	pGraph = new Graph();
 
-	
+
 
 
 
@@ -126,6 +126,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	}
 
 	counter = 0;
+	counter2 = 0;
 
 	////////////----------------------------< Create random Pedestrians >----------------------////////////
 	for (int i = 0; i <= 100; i++)
@@ -133,7 +134,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 		agent.push_back(new Agents);
 		agent[i]->m_position = pGraph->SafeRandPos();
 	}
-
+	bBloodTrail = false;
 	////////////----------------------------< Make First Path >----------------------////////////
 	Path = pGraph->Dijkstras(pGraph->ClosestNode(policePos), pGraph->ClosestNode(playerPos));
 }
@@ -148,20 +149,28 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 {
 
 	Input * InputManager = GetInput();
-	//if (InputManager->WasKeyPressed(GLFW_KEY_SPACE))
 
-	//-----------------------< Dijkstras >-------------------------//
+
+
 	system("cls");
 
-	for (int i = 0; i < agent.size()-1; i++)
+	if (InputManager->WasKeyPressed(GLFW_KEY_R))
 	{
-		
- 		//if (counter == 10)
+		for (int i = 0; i < agent.size(); i++)
+		{
+			agent[i]->m_position = pGraph->SafeRandPos();
+		}
+	}
+
+	for (int i = 0; i < agent.size() - 1; i++)
+	{
+
+		//if (counter == 10)
 		//agent[i]->m_velocity = pGraph->SafeRandPos();
 
 		agent[i]->Update(deltaTime);
 	}
-	
+
 	//agent[0]->m_position += (agent[0]->m_velocity - agent[0]->m_position).Normalised() * 10 * deltaTime;
 
 
@@ -170,13 +179,6 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 	{
 		k = 0;
 		Path = pGraph->Dijkstras(pGraph->ClosestNode(policePos), pGraph->ClosestNode(playerPos));
-
-		///////////--------< Stop Game >--------///////////
-
-		///////////------< Display Text >-------///////////
-
-		///////////--------< End Game >---------///////////
-
 	}
 	////////////----------------------< Move to next Node in Path >----------------------////////////
 	policePos += (Path[k] - policePos).Normalised() * 100 * deltaTime;
@@ -234,26 +236,53 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 		}
 	}
 
+
+
 	playerMat = playerMat.Translation(playerPos) *  playerMat.Rotation(rotate) * playerMat.Scale(scale);
 
 
 	////////////-----------------------< Blood Trail >-----------------------////////////
-	if (fTimer > 0.01)
-	{
-		blood[counter]->Pos.x = playerPos.x;
-		blood[counter]->Pos.y = playerPos.y;
-		counter++;
-		if (counter > 10)
-		{
-			counter = 0;
-		}
 
-		fTimer = 0;
-	}
-	else
+	if (InputManager->WasKeyPressed(GLFW_KEY_SPACE))
 	{
-		fTimer += deltaTime;
+		bBloodTrail = true;
 	}
+
+	if (bBloodTrail)
+	{
+		if (fTimer > 0.01)
+		{
+			
+			if (counter > 10)
+			{
+				{
+					blood[counter2]->Pos = Vector2(-10.0f, -10.0f);
+					counter2++;
+
+				}
+				if (counter2 > 10)
+				{
+					counter = 0;
+					counter2 = 0;
+					bBloodTrail = false;
+				}
+
+			}
+			else
+			{
+				blood[counter]->Pos.x = playerPos.x;
+				blood[counter]->Pos.y = playerPos.y;
+				counter++;
+			}
+
+			fTimer = 0;
+		}
+		else
+		{
+			fTimer += deltaTime;
+		}
+	}
+
 }
 
 void Game1::Draw()//-------------------------------------------------------------------------------------------------------------------------------------------//
@@ -296,7 +325,7 @@ void Game1::Draw()//------------------------------------------------------------
 
 	////////////-----------------------< Draw Pedestrians >-----------------------////////////
 	m_spritebatch->SetRenderColor(255, 255, 255, 255);
-	
+
 	for (int i = 0; i < agent.size(); i++)
 	{
 		m_spritebatch->DrawSprite(personTex, agent[i]->m_position.x, agent[i]->m_position.y, 10.0f, 10.0f);
