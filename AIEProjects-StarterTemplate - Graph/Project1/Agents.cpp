@@ -1,5 +1,6 @@
 #include "Agents.h"
 #include "SpriteBatch.h"
+#include "Input.h"
 
 
 Agents::Agents()
@@ -7,25 +8,26 @@ Agents::Agents()
 	m_acceleration = Vector2(2.0f, 2.0f);
 	//m_velocity = Vector2(200.0f, 200.0f);
 	//m_force = Vector2(500.0f, 200.0f);
-	Wander* temp = new Wander();
-	Seek* temp2 = new Seek();
-	m_behaviours.push_back(temp);
+	Wander* wander = new Wander();
+	Seek* seek = new Seek();
+	m_behaviours.push_back(wander);
 }
 
 Agents::Agents(Vector2 Pos)
 {
 	//Vector2 Vec(100.0f, 100.0f);
 	m_position = Pos;
-	Wander* temp = new Wander();
+	Wander* wander = new Wander();
 	//temp->SetTarget(&Vec);
 
-	m_behaviours.push_back(temp);
+	m_behaviours.push_back(wander);
 
 
 //	m_acceleration = Vector2(10.0f, 10.0f);
 //	m_velocity = Vector2(200.0f, 200.0f);
 //	m_force = Vector2(500.0f, 200.0f);
 
+	bWander = false;
 }
 
 
@@ -36,7 +38,11 @@ Agents::~Agents()
 
 void Agents::Update(float deltaTime)
 {
-		
+	if (bWander == true)
+	{
+		//seek->SetTarget();
+		m_behaviours.push_back(seek);
+	}
 	// Sense
 		// check the environment
 

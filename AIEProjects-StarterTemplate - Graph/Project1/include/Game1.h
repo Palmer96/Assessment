@@ -50,7 +50,7 @@ protected:
 	//Agents person;
 
 
-	Vector3 playerPos;
+	Vector2 playerPos;
 	Matrix3 playerMat;
 
 	float rotate;

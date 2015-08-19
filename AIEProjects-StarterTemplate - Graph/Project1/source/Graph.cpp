@@ -8,7 +8,7 @@ Graph::Graph()
 {
 	//Vector2 data;
 	//Node* node1 = new Node(Vector2(0.0f, 0.0f));
-
+	
 }
 
 
@@ -44,12 +44,13 @@ Node::Node()
 	bIsEnd = false;
 
 	traversable = true;
+	closeNode = false;
 	//node->data = data;
 }
 
 Node::Node(Vector2 VecData)
 {
-	//	data = VecData;
+		data = VecData;
 	//	Node* node = new Node(Vector2(33));
 	//	node->data = VecData;
 	bIsStart = false;
@@ -113,7 +114,6 @@ std::vector<Vector2> Graph::Dijkstras(Node* a_startNode, Node* a_endNode)
 {
 	Node* currentNode;
 	std::vector <Node*> open;
-	//	a_endNode = nullptr;
 
 	for (int i = 0; i < nodes.size(); i++)
 	{
@@ -127,16 +127,10 @@ std::vector<Vector2> Graph::Dijkstras(Node* a_startNode, Node* a_endNode)
 	a_startNode->G = 0.0f;
 	open.push_back(a_startNode);
 	float lowestG = 100.0f;
+
+
 	while (open.empty() != true)
 	{
-		//for (int i = 0; i < open.size(); i++)
-		//{
-		//	if (lowestG > open[i]->G)
-		//	{
-		//		lowestG = open[i]->G;
-		//	}
-		//}
-
 		std::sort(open.begin(), open.end(), SortByG);
 		currentNode = open.back();
 		currentNode->traversed = true;

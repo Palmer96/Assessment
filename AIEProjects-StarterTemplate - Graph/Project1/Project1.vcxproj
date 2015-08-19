@@ -89,6 +89,7 @@
     <ClCompile Include="Agents.cpp" />
     <ClCompile Include="Blood.cpp" />
     <ClCompile Include="DrunkenModifier.cpp" />
+    <ClCompile Include="FSM.cpp" />
     <ClCompile Include="IBehaviour.cpp" />
     <ClCompile Include="KeyboardControler.cpp" />
     <ClCompile Include="main.cpp" />
@@ -101,6 +102,7 @@
     <ClInclude Include="Agents.h" />
     <ClInclude Include="Blood.h" />
     <ClInclude Include="DrunkenModifier.h" />
+    <ClInclude Include="FSM.h" />
     <ClInclude Include="IBehaviour.h" />
     <ClInclude Include="include\Game1.h" />
     <ClInclude Include="include\Graph.h" />

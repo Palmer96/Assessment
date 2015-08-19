@@ -18,11 +18,8 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	m_spritebatch->SetColumnMajor(true);
 	pGraph = new Graph();
 
-
-
-
-
-	//-----------------------< Create Nodes >-------------------------//
+#pragma region	//-----------------------< Create Nodes >-------------------------//
+	
 	for (int i = 20; i <= 780; i += 20)//39
 	{
 		for (int j = 20; j <= 1180; j += 20)//59
@@ -30,7 +27,9 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 			pGraph->AddNode(Vector2(j, i));
 		}
 	}
-	//-----------------------< Create Edges >-------------------------//
+#pragma endregion
+
+#pragma region	//-----------------------< Create Edges >-------------------------//
 	for (int j = 0; j < 2264; j += 59)
 	{
 		for (int i = 0; i < 58; i++)
@@ -47,7 +46,9 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 			pGraph->AddEdge(pGraph->nodes[i + j + 59], pGraph->nodes[i + j], 1);
 		}
 	}
-	//-----------------------< Set Untraversable Nodes >-------------------------//
+#pragma endregion
+
+#pragma region	//-----------------< Set Untraversable Nodes >--------------------//
 	int count = 0;
 	int count2 = 0;
 
@@ -85,8 +86,9 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	{
 		pGraph->nodes[i]->traversable = false;
 	}
+#pragma endregion
 
-	//-----------------------< Set Variables >-------------------------//
+#pragma region	//-----------------------< Set Variables >------------------------//
 
 	pGraph->ActivateDijkstras = false;
 
@@ -97,7 +99,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	roofTex = new Texture("./Images/Roof.png");
 	bloodTex = new Texture("./Images/Blood.png");
 
-	playerPos = Vector3(600.0f, 400.0f, 1.0f);
+	playerPos = Vector2(600.0f, 400.0f);
 
 	playerMat = Matrix3(playerPos.x, 0.0f, 0.0f,
 		0.0f, playerPos.y, 0.0f,
@@ -127,14 +129,17 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 
 	counter = 0;
 	counter2 = 0;
+#pragma endregion
 
-	////////////----------------------------< Create random Pedestrians >----------------------////////////
+#pragma region	//----------------< Create random Pedestrians >-------------------//
 	for (int i = 0; i <= 100; i++)
 	{
 		agent.push_back(new Agents);
 		agent[i]->m_position = pGraph->SafeRandPos();
 	}
 	bBloodTrail = false;
+#pragma endregion
+
 	////////////----------------------------< Make First Path >----------------------////////////
 	Path = pGraph->Dijkstras(pGraph->ClosestNode(policePos), pGraph->ClosestNode(playerPos));
 }
@@ -150,9 +155,17 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 
 	Input * InputManager = GetInput();
 
-
-
 	system("cls");
+	for (int i = 0; i < pGraph->nodes.size(); i++)
+	{
+		pGraph->nodes[i]->closeNode = false;
+	}
+	for (int i = 0; i < pGraph->ClosestNode(playerPos)->edges.size(); i++)
+	{
+		pGraph->ClosestNode(playerPos)->closeNode = true;
+		pGraph->ClosestNode(playerPos)->edges[i]->end->closeNode = true;
+	}
+
 
 	if (InputManager->WasKeyPressed(GLFW_KEY_R))
 	{
@@ -171,6 +184,14 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 		agent[i]->Update(deltaTime);
 	}
 
+	if (InputManager->WasKeyPressed(GLFW_KEY_T))
+	{
+		for (int i = 0; i < agent.size(); i++)
+		{
+		//	agent[i]->seek->SetTarget(playerPos);
+			agent[i]->bWander = true;
+		}
+	}
 	//agent[0]->m_position += (agent[0]->m_velocity - agent[0]->m_position).Normalised() * 10 * deltaTime;
 
 
@@ -197,8 +218,8 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 	}
 	////////////-------------------------< Steering >------------------------////////////
 
-	Vector3 upVec = Vector3(playerMat.a12, playerMat.a11, 1.0);
-	Vector3 normVec = upVec.Normalised();
+	Vector2 upVec = Vector2(playerMat.a12, playerMat.a11);
+	Vector2 normVec = upVec.Normalised();
 
 	if (InputManager->IsKeyDown(GLFW_KEY_UP))
 	{
@@ -236,9 +257,10 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 		}
 	}
 
+	Vector3 playerPosV3(playerPos.x, playerPos.y, 1.0f);
 
 
-	playerMat = playerMat.Translation(playerPos) *  playerMat.Rotation(rotate) * playerMat.Scale(scale);
+	playerMat = playerMat.Translation(playerPosV3) *  playerMat.Rotation(rotate) * playerMat.Scale(scale);
 
 
 	////////////-----------------------< Blood Trail >-----------------------////////////
@@ -252,7 +274,7 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 	{
 		if (fTimer > 0.01)
 		{
-			
+
 			if (counter > 10)
 			{
 				{
@@ -282,9 +304,20 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 			fTimer += deltaTime;
 		}
 	}
-
+	/*
+	for (int j = 0; j < pGraph->nodes.size(); j++)
+	{
+		if (pGraph->nodes[j]->closeNode == true)
+		for (int i = 0; i < agent.size(); i++)
+		{
+			if (pGraph->nodes[j] == pGraph->ClosestNode(agent[i]->m_position))
+			{
+				agent.erase(agent.begin() + i);
+			}
+		}
+	}
+	*/
 }
-
 void Game1::Draw()//-------------------------------------------------------------------------------------------------------------------------------------------//
 {
 	// clear the back buffer
@@ -298,6 +331,11 @@ void Game1::Draw()//------------------------------------------------------------
 	////////////-------------------------< Draw Nodes >---------------------------////////////
 	for (int i = 0; i < pGraph->nodes.size(); i++)
 	{
+		if (pGraph->nodes[i]->closeNode == true)
+		{
+			m_spritebatch->SetRenderColor(255, 0, 0, 255);
+		}
+
 		if (pGraph->nodes[i]->traversable == false)
 		{
 			m_spritebatch->DrawSprite(roofTex, pGraph->nodes[i]->data.x, pGraph->nodes[i]->data.y, 20.0f, 20.0f);
@@ -306,6 +344,7 @@ void Game1::Draw()//------------------------------------------------------------
 		{
 			m_spritebatch->DrawSprite(roadTex, pGraph->nodes[i]->data.x, pGraph->nodes[i]->data.y, 20.0f, 20.0f);
 		}
+		m_spritebatch->SetRenderColor(255, 255, 255, 255);
 	}
 
 	////////////-----------------------< Draw Dijkstras >-------------------------////////////

@@ -30,6 +30,7 @@ public:
 	bool bIsStart;
 	bool bIsEnd;
 
+	bool closeNode;
 
 	float travelCost;
 };
@@ -49,10 +50,6 @@ public:
 class Graph
 {
 public:
-
-
-
-
 	Graph();
 	~Graph();
 
@@ -83,6 +80,8 @@ protected:
 	SpriteBatch *m_spritebatch;
 
 };
+
+
 
 
 
