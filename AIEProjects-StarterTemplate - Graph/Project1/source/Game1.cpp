@@ -128,7 +128,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 #pragma endregion
 
 #pragma region	//----------------< Create random Pedestrians >-------------------//
-	for (int i = 0; i <= 100; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		agent.push_back(new Agents);
 		agent[i]->m_position = pGraph->SafeRandPos();
@@ -150,17 +150,22 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 {
 
 	Input * InputManager = GetInput();
+	
+	
+	Vector2* ptr = &playerPos;
+	agent[0]->flee->SetTarget(ptr);//	target = ptr;
 
 	if (InputManager->WasKeyPressed(GLFW_KEY_T))
 	{
 		for (int i = 0; i < agent.size(); i++)
 		{
 			Vector2* ptr = &playerPos;
-			agent[1]->bSeek = true;
-			agent[1]->seek->target = playerPos;
+			agent[0]->bSeek = true;
+			agent[0]->seek->target = ptr;
 		}
 	}
 
+	//if (playerPos )
 
 
 	//player.Update(deltaTime);

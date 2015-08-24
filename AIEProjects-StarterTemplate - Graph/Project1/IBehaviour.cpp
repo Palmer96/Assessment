@@ -6,12 +6,12 @@
 
 Vector2 Seek::Update(Agents* agent)
 {
-	return ((target - agent->m_position).Normalised() * agent->m_acceleration) - agent->m_velocity;
+	return ((*target - agent->m_position).Normalised() * agent->m_acceleration) - agent->m_velocity;
 }
 
 void Seek::SetTarget(Vector2* a_target)
 {
-	//this->target = a_target;
+	this->target = a_target;
 }
 
 
