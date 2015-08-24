@@ -106,16 +106,12 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 		0.0f, 0.0f, 1.0f);
 
 	policePos = Vector2(30.0f, 30.0f);
-	agentPos = Vector2(100.0f, 100.0f);
 	rotate = 0.0f;
 
 
 	scale = Vector3(1.0f, 1.0f, 1.0f);
 
 	k = 0;
-
-
-	//Alpha = 255;
 
 
 	fTimer = 0.0f;
@@ -155,7 +151,30 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 
 	Input * InputManager = GetInput();
 
+	if (InputManager->WasKeyPressed(GLFW_KEY_T))
+	{
+		for (int i = 0; i < agent.size(); i++)
+		{
+			Vector2* ptr = &playerPos;
+			agent[1]->bSeek = true;
+			agent[1]->seek->target = playerPos;
+		}
+	}
+
+
+
+	//player.Update(deltaTime);
+	
 	system("cls");
+
+	for (int i = 0; i < agent.size(); i++)
+	{
+		//if (counter == 10)
+		agent[i]->Update(deltaTime);
+	}
+
+
+
 	for (int i = 0; i < pGraph->nodes.size(); i++)
 	{
 		pGraph->nodes[i]->closeNode = false;
@@ -175,23 +194,9 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 		}
 	}
 
-	for (int i = 0; i < agent.size() - 1; i++)
-	{
+	
 
-		//if (counter == 10)
-		//agent[i]->m_velocity = pGraph->SafeRandPos();
 
-		agent[i]->Update(deltaTime);
-	}
-
-	if (InputManager->WasKeyPressed(GLFW_KEY_T))
-	{
-		for (int i = 0; i < agent.size(); i++)
-		{
-		//	agent[i]->seek->SetTarget(playerPos);
-			agent[i]->bWander = true;
-		}
-	}
 	//agent[0]->m_position += (agent[0]->m_velocity - agent[0]->m_position).Normalised() * 10 * deltaTime;
 
 
@@ -373,6 +378,10 @@ void Game1::Draw()//------------------------------------------------------------
 	m_spritebatch->DrawSpriteTransformed3x3(playerTex, playerMat.GetMatrix(), 25.0f, 75.0f);
 	////////////--------------------------< Draw Police >-------------------------////2////////
 	m_spritebatch->DrawSprite(policeTex, policePos.x, policePos.y, 10.0f, 10.0f);
+
+
+
+	//m_spritebatch->DrawSpriteTransformed3x3(playerTex, player.m_playerMat.GetMatrix(), 25.0f, 75.0f);
 
 
 

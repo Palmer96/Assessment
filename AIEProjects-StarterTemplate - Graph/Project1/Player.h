@@ -3,22 +3,33 @@
 
 
 
-class Player : public Agents
+class Player// : public Agents
 {
 public:
 	Player();
 	~Player();
 
 
+	void Update(float deltaTime, int movement);
 
-protected:
+
+
+//protected:
 
 	Vector2 m_position;
 	Vector2 m_velocity;
 	Vector2 m_acceleration;
-	Vector2 m_force;
+
+	Matrix3 m_playerMat;
+
+
+	float rotate;
+	Vector3 scale;
 
 
 
 };
+
+
+
 

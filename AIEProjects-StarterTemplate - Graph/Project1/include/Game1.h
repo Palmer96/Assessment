@@ -10,6 +10,7 @@ Description:
 #include "Graph.h"
 #include "Blood.h"
 #include "Agents.h"
+#include "Player.h"
 
 
 
@@ -49,6 +50,7 @@ protected:
 
 	//Agents person;
 
+	Player player;
 
 	Vector2 playerPos;
 	Matrix3 playerMat;

@@ -38,7 +38,7 @@ public:
 	Vector2 m_acceleration;
 	Vector2 m_force;
 
-	bool bWander;
+	bool bSeek;
 
 	Node* closestNode;
 
