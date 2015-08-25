@@ -19,7 +19,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	pGraph = new Graph();
 
 #pragma region	//-----------------------< Create Nodes >-------------------------//
-	
+
 	for (int i = 20; i <= 780; i += 20)//39
 	{
 		for (int j = 20; j <= 1180; j += 20)//59
@@ -105,6 +105,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 		0.0f, playerPos.y, 0.0f,
 		0.0f, 0.0f, 1.0f);
 
+//	Police.m_position = Vector2(30.0f, 30.0f);
 	policePos = Vector2(30.0f, 30.0f);
 	rotate = 0.0f;
 
@@ -117,6 +118,20 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	fTimer = 0.0f;
 
 
+	//	for (int i = 0; i < pGraph->nodes.size() - 1; i++)
+	//	{
+	//		if (pGraph->nodes[i]->traversable == true)
+	//		{
+	//			walls.push_back(new Node());// pGraph->nodes[i]);
+	//		//	walls[i]->data = pGraph->nodes[i]->data;
+	//
+	//			for (int j = 0; j < walls.size() - 1; j++)
+	//			{
+	//				walls[j]->data = pGraph->nodes[i]->data;
+	//			}
+	//		}
+	//	}
+
 
 	for (int i = 0; i <= 10; i++)
 	{
@@ -128,7 +143,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 #pragma endregion
 
 #pragma region	//----------------< Create random Pedestrians >-------------------//
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		agent.push_back(new Agents);
 		agent[i]->m_position = pGraph->SafeRandPos();
@@ -150,32 +165,57 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 {
 
 	Input * InputManager = GetInput();
-	
-	
-	Vector2* ptr = &playerPos;
-	agent[0]->flee->SetTarget(ptr);//	target = ptr;
+	Node* prevPos;
 
-	if (InputManager->WasKeyPressed(GLFW_KEY_T))
+	Vector2* ptrPlayer = &playerPos;
+
+	//agent[0]->flee->SetTarget(ptr);//	target = ptr;
+
+	for (int i = 0; i < agent.size(); i++)
 	{
-		for (int i = 0; i < agent.size(); i++)
+
+		if ((agent[i]->m_position - playerPos).Magnitude() <= 100.0f)
 		{
-			Vector2* ptr = &playerPos;
-			agent[0]->bSeek = true;
-			agent[0]->seek->target = ptr;
+			agent[i]->flee->SetTarget(ptrPlayer);
+			agent[i]->bFlee = true;
 		}
+		else
+			agent[i]->bFlee = false;
+
+		//	for (int j = 0; j < walls.size(); j++)
+		//	{
+		//		if ((agent[i]->m_position - walls[j]->data).Magnitude() <= 10.0f)
+		//		{
+		//			Vector2* ptrWall = &walls[j]->data;
+		//			agent[i]->flee->SetTarget(ptrWall);
+		//			agent[i]->bFlee = true;
+		//		}
+		//		else
+		//			agent[i]->bFlee = false;
+		//	}
+		if ((playerPos - agent[i]->m_position).Magnitude() < 20.0f)
+		{
+			prevPos = pGraph->ClosestNode(agent[i]->m_position);
+			agent[i]->bAlive = false;
+		}
+		if (agent[i]->bAlive == true)
+			agent[i]->Update(deltaTime);
 	}
 
-	//if (playerPos )
-
+	//if ((playerPos - policePos).Magnitude() < 150.0f)
+	//{
+	//	policePos += ((Vector2(0.1f, 0.1f) + Police->SetTarget(ptrPlayer);)) * m_acceleration * deltaTime;
+	//}
 
 	//player.Update(deltaTime);
-	
+
 	system("cls");
 
 	for (int i = 0; i < agent.size(); i++)
 	{
 		//if (counter == 10)
-		agent[i]->Update(deltaTime);
+
+
 	}
 
 
@@ -199,7 +239,7 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 		}
 	}
 
-	
+
 
 
 	//agent[0]->m_position += (agent[0]->m_velocity - agent[0]->m_position).Normalised() * 10 * deltaTime;
@@ -317,14 +357,14 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 	/*
 	for (int j = 0; j < pGraph->nodes.size(); j++)
 	{
-		if (pGraph->nodes[j]->closeNode == true)
-		for (int i = 0; i < agent.size(); i++)
-		{
-			if (pGraph->nodes[j] == pGraph->ClosestNode(agent[i]->m_position))
-			{
-				agent.erase(agent.begin() + i);
-			}
-		}
+	if (pGraph->nodes[j]->closeNode == true)
+	for (int i = 0; i < agent.size(); i++)
+	{
+	if (pGraph->nodes[j] == pGraph->ClosestNode(agent[i]->m_position))
+	{
+	agent.erase(agent.begin() + i);
+	}
+	}
 	}
 	*/
 }
@@ -377,7 +417,10 @@ void Game1::Draw()//------------------------------------------------------------
 
 	for (int i = 0; i < agent.size(); i++)
 	{
-		m_spritebatch->DrawSprite(personTex, agent[i]->m_position.x, agent[i]->m_position.y, 10.0f, 10.0f);
+		if (agent[i]->bAlive == true)
+		{
+			m_spritebatch->DrawSprite(personTex, agent[i]->m_position.x, agent[i]->m_position.y, 10.0f, 10.0f);
+		}
 	}
 	////////////--------------------------< Draw Player >-------------------------////////////
 	m_spritebatch->DrawSpriteTransformed3x3(playerTex, playerMat.GetMatrix(), 25.0f, 75.0f);

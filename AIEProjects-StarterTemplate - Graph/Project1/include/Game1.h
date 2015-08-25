@@ -58,6 +58,7 @@ protected:
 	float rotate;
 	Vector3 scale;
 
+	Agents Police;
 	Vector2 policePos;
 	Vector2 agentPos;
 
@@ -66,6 +67,7 @@ protected:
 	std::vector<Blood*> blood;
 	std::vector<Agents*> agent;
 
+	std::vector<Node*> walls;
 
 	float fTimer;
 

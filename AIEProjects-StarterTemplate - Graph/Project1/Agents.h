@@ -40,8 +40,11 @@ public:
 	Vector2 m_force;
 
 	bool bSeek;
-	bool bAvoid;
 	bool bFlee;
+
+
+
+	bool bAlive;
 
 	Node* closestNode;
 

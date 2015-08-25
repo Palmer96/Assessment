@@ -6,15 +6,18 @@
 Agents::Agents()
 {
 	m_acceleration = Vector2(5.0f, 5.0f);
-	m_velocity = Vector2(1.0f, 1.0f);
+	m_velocity = Vector2(0.0000000001f, 0.0000000001f);
 	//m_force = Vector2(500.0f, 200.0f);
 	wander = new Wander();
 	flee = new Flee();
 	m_behaviours.push_back(wander);
 	m_behaviours.push_back(flee);
 	bSeek = false;
-	bAvoid = false;
 	bFlee = false;
+
+
+	bAlive = true;
+
 }
 
 
@@ -35,13 +38,13 @@ void Agents::Update(float deltaTime)
 //		//m_behaviours.push_back(seek);
 //
 //		//Seek* seek = new Seek();
-//		m_acceleration = Vector2(6.0f, 6.0f);
+		m_acceleration = Vector2(8.0f, 8.0f);
 		m_force += m_behaviours[1]->Update(this);
 	}
 	else
 	{
 		//Wander* wander = new Wander();
-//		m_acceleration = Vector2(5.0f, 5.0f);
+		m_acceleration = Vector2(5.0f, 5.0f);
 		m_force += m_behaviours[0]->Update(this);
 	}
 
