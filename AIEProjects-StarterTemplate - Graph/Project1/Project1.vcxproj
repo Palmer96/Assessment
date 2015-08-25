@@ -88,12 +88,11 @@
   <ItemGroup>
     <ClCompile Include="Agents.cpp" />
     <ClCompile Include="Blood.cpp" />
-    <ClCompile Include="DrunkenModifier.cpp" />
     <ClCompile Include="FSM.cpp" />
     <ClCompile Include="IBehaviour.cpp" />
-    <ClCompile Include="KeyboardControler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Police.cpp" />
     <ClCompile Include="source\Game1.cpp" />
     <ClCompile Include="source\Graph.cpp" />
     <ClCompile Include="source\MathLib.cpp" />
@@ -101,14 +100,13 @@
   <ItemGroup>
     <ClInclude Include="Agents.h" />
     <ClInclude Include="Blood.h" />
-    <ClInclude Include="DrunkenModifier.h" />
     <ClInclude Include="FSM.h" />
     <ClInclude Include="IBehaviour.h" />
     <ClInclude Include="include\Game1.h" />
     <ClInclude Include="include\Graph.h" />
     <ClInclude Include="include\MathLib.h" />
-    <ClInclude Include="KeyboardControler.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Police.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

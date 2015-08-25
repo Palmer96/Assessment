@@ -20,7 +20,7 @@ Player::~Player()
 {
 }
 
-void Player::Update(float deltaTime, int movement)
+void Player::Update(float deltaTime, Input* input)
 {
 	Input * InputManager;
 

@@ -12,6 +12,7 @@ Agents::Agents()
 	flee = new Flee();
 	m_behaviours.push_back(wander);
 	m_behaviours.push_back(flee);
+	m_behaviours.push_back(seek);
 	bSeek = false;
 	bFlee = false;
 
@@ -30,44 +31,30 @@ Agents::~Agents()
 
 void Agents::Update(float deltaTime)
 {
+	m_velocity = Vector2(0.00001, 0.00001);
 	m_force = Vector2(0.0f, 0.0f);
-	if (bFlee == true)
-		{
-//		//seek->SetTarget();
-//		//m_behaviours.pop_back();
-//		//m_behaviours.push_back(seek);
-//
-//		//Seek* seek = new Seek();
-		m_acceleration = Vector2(8.0f, 8.0f);
-		m_force += m_behaviours[1]->Update(this);
-	}
-	else
+	//if (m_position.x > 1160 || m_position.y > 760 || m_position.x < 0 || m_position.y < 0)
+	//	m_force -= m_behaviours[behaviour]->Update(this);
+	//else
 	{
-		//Wander* wander = new Wander();
-		m_acceleration = Vector2(5.0f, 5.0f);
-		m_force += m_behaviours[0]->Update(this);
+		switch (1)
+		{
+		case 0:
+			m_acceleration = Vector2(5.0f, 5.0f);
+			m_force += m_behaviours[0]->Update(this);
+			break;
+		case 1:
+			m_acceleration = Vector2(8.0f, 8.0f);
+			m_force += m_behaviours[1]->Update(this);
+			break;
+		case 2:
+			m_acceleration = Vector2(8.0f, 8.0f);
+			m_force += m_behaviours[2]->Update(this);
+			break;
+		}
 	}
+	m_position += ((m_velocity + m_force)) * m_acceleration * deltaTime;
 
-	// Sense
-		// check the environment
-
-	// Think
-		// choose Behaviour
-
-	//Act
-		// use behaviour
-
-//	for (auto iter = m_behaviours.begin(); iter != m_behaviours.end(); iter++)
-//		m_force += (*iter)->Update(this);
-	
-
-	 m_position += ((m_velocity + m_force)) * m_acceleration * deltaTime;
-	//temp->Update();;
-
-				// Physics
-	//	AddForce();
-	//	AddAcceleration();
-	//	AddVelocity();
 }
 void Agents::Draw(Texture *personTex)
 {

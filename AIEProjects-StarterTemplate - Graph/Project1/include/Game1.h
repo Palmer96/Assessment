@@ -11,6 +11,7 @@ Description:
 #include "Blood.h"
 #include "Agents.h"
 #include "Player.h"
+#include "Police.h"
 
 
 
@@ -58,7 +59,7 @@ protected:
 	float rotate;
 	Vector3 scale;
 
-	Agents Police;
+	Police Police;
 	Vector2 policePos;
 	Vector2 agentPos;
 

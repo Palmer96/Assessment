@@ -1,18 +1,20 @@
 #pragma once
 #include "Agents.h"
+#include "Input.h"
 
 
 
-class Player// : public Agents
+class Player : public Agents
 {
 public:
 	Player();
 	~Player();
 
 
-	void Update(float deltaTime, int movement);
+	void Update(float deltaTime, Input* input);
 
 
+	//Input* 
 
 //protected:
 

@@ -24,13 +24,14 @@ public:
 
 	Wander* wander;
 	Seek* seek;
-	Avoid* avoid;
 	Flee* flee;
 //protected:
 
 //	SpriteBatch *m_spritebatch;
 
 	std::vector < IBehaviour * > m_behaviours;
+
+	
 
 	Texture * personTex;
 
@@ -41,7 +42,6 @@ public:
 
 	bool bSeek;
 	bool bFlee;
-
 
 
 	bool bAlive;

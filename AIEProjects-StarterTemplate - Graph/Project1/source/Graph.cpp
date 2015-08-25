@@ -227,7 +227,7 @@ Node* Graph::ClosestNode(Vector2 Pos)
 
 Vector2 Graph::SafeRandPos()
 {
-	Vector2 randPos(rand() % 1190 + 10, rand() % 790 + 10);
+	Vector2 randPos(rand() % 1160 + 10, rand() % 760 + 10);
 	if (ClosestNode(randPos)->traversable)
 	{
 		return randPos;
