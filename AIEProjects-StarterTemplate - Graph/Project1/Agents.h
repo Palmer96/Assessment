@@ -5,7 +5,7 @@
 #include "IBehaviour.h"
 #include "Texture.h"
 #include "Graph.h"
-
+#include "Player.h"
 
 
 class Agents
@@ -25,6 +25,8 @@ public:
 	Wander* wander;
 	Seek* seek;
 	Flee* flee;
+
+	Vector2* player;
 //protected:
 
 //	SpriteBatch *m_spritebatch;
@@ -48,5 +50,6 @@ public:
 
 	Node* closestNode;
 
+	int eState;
 
 };

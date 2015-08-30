@@ -4,7 +4,7 @@
 
 
 
-class Player : public Agents
+class Player //: public Agents
 {
 public:
 	Player();

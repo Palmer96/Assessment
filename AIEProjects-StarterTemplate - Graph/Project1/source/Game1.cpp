@@ -99,6 +99,8 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	roofTex = new Texture("./Images/Roof.png");
 	bloodTex = new Texture("./Images/Blood.png");
 
+	pauseTex = new Texture("./Images/pause-banner.png");
+
 	playerPos = Vector2(600.0f, 400.0f);
 
 	playerMat = Matrix3(playerPos.x, 0.0f, 0.0f,
@@ -147,12 +149,14 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	{
 		agent.push_back(new Agents);
 		agent[i]->m_position = pGraph->SafeRandPos();
+		agent[i]->player = &playerPos;
 	}
 	bBloodTrail = false;
 #pragma endregion
 
 	////////////----------------------------< Make First Path >----------------------////////////
 	Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(playerPos));
+	pause = true;
 }
 
 Game1::~Game1()//-------------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -163,233 +167,246 @@ Game1::~Game1()//---------------------------------------------------------------
 
 void Game1::Update(float deltaTime)//-------------------------------------------------------------------------------------------------------------------------------------------//
 {
-	int asd = 0;
 	Input * InputManager = GetInput();
-	//Node* prevPos = pGraph->nodes[200];
 
-	
-
-	for (int i = 0; i < agent.size(); i++)
+	if (InputManager->WasKeyPressed(GLFW_KEY_SPACE))
 	{
-		agent[i]->flee->SetTarget(&playerPos);
-		agent[i]->Update(deltaTime);
+		if (pause)
+			pause = false;
+		else
+			pause = true;
 	}
-	player.Update(deltaTime, GetInput());
-	Police.seek->SetTarget(&playerPos);
-	Police.Update(deltaTime);
-	
 
-//	for (int i = 0; i < agent.size(); i++)
-//	{
-//
-//		if ((agent[i]->m_position - playerPos).Magnitude() <= 100.0f)
-//		{
-//			agent[i]->flee->SetTarget(&playerPos);
-//			asd = 1;
-//		}
-//		else
-//		{
-//			asd = 0;
-//		}
-//		//else
-//		//	agent[i]->bFlee = false;
-//		//	for (int j = 0; j < walls.size(); j++)
-//		//	{
-//		//		if ((agent[i]->m_position - walls[j]->data).Magnitude() <= 10.0f)
-//		//		{
-//		//			Vector2* ptrWall = &walls[j]->data;
-//		//			agent[i]->flee->SetTarget(ptrWall);
-//		//			agent[i]->bFlee = true;
-//		//		}
-//		//		else
-//		//			agent[i]->bFlee = false;
-//		//	}
-//
-//		if ((playerPos - agent[i]->m_position).Magnitude() < 20.0f)
-//		{
-//
-//			prevPos = pGraph->ClosestNode(agent[i]->m_position);
-//			Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), prevPos);
-//			agent[i]->m_position = Vector2(-10.0, -10.0);
-//			agent[i]->bAlive = false;
-//			bBloodTrail = true;
-//			pGraph->ActivateDijkstras = true;
-//			k = 0;
-//		}
-//		else
-//		{
-//			Police.Update(deltaTime);
-//		}
-//		if (agent[i]->bAlive == true)
-//			agent[i]->Update(deltaTime, asd);
-//	}
-//
-//	if ((playerPos - Police.m_position).Magnitude() < 150.0f)
-//	{
-//		Police.bSeek = true;
-//
-//	}
-//	else
-//	{
-//		Police.bSeek = false;
-//
-//		
-//
-//		//	pGraph->ActivateDijkstras = true;
-//		Police.m_force += (Path[k] - Police.m_position).Normalised() * 50 * deltaTime;
-//
-//		////////////-----------------------< Check if at Final Node >-----------------------////////////
-//		if (pGraph->ClosestNode(Police.m_position) == pGraph->ClosestNode(Path[Path.size() - 1]))
-//		{
-//			k = 0;
-//		}
-//		////////////----------------------< Move to next Node in Path >----------------------////////////
-//		if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(Police.m_position))
-//		{
-//			k++;
-//		}
-//	}
+	if (!pause)
+	{
+		int asd = 0;
+
+		//Node* prevPos = pGraph->nodes[200];
+
+
+
+		for (int i = 0; i < agent.size(); i++)
+		{
+			agent[i]->flee->SetTarget(&playerPos);
+			agent[i]->Update(deltaTime);
+		}
+		//player.Update(deltaTime, GetInput());
+	//	Police.seek->SetTarget(&playerPos);
+//		Police.Update(deltaTime);
+
+
+		//	for (int i = 0; i < agent.size(); i++)
+		//	{
+		//
+		//		if ((agent[i]->m_position - playerPos).Magnitude() <= 100.0f)
+		//		{
+		//			agent[i]->flee->SetTarget(&playerPos);
+		//			asd = 1;
+		//		}
+		//		else
+		//		{
+		//			asd = 0;
+		//		}
+		//		//else
+		//		//	agent[i]->bFlee = false;
+		//		//	for (int j = 0; j < walls.size(); j++)
+		//		//	{
+		//		//		if ((agent[i]->m_position - walls[j]->data).Magnitude() <= 10.0f)
+		//		//		{
+		//		//			Vector2* ptrWall = &walls[j]->data;
+		//		//			agent[i]->flee->SetTarget(ptrWall);
+		//		//			agent[i]->bFlee = true;
+		//		//		}
+		//		//		else
+		//		//			agent[i]->bFlee = false;
+		//		//	}
+		//
+		//		if ((playerPos - agent[i]->m_position).Magnitude() < 20.0f)
+		//		{
+		//
+		//			prevPos = pGraph->ClosestNode(agent[i]->m_position);
+		//			Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), prevPos);
+		//			agent[i]->m_position = Vector2(-10.0, -10.0);
+		//			agent[i]->bAlive = false;
+		//			bBloodTrail = true;
+		//			pGraph->ActivateDijkstras = true;
+		//			k = 0;
+		//		}
+		//		else
+		//		{
+		//			Police.Update(deltaTime);
+		//		}
+		//		if (agent[i]->bAlive == true)
+		//			agent[i]->Update(deltaTime, asd);
+		//	}
+		//
+		//	if ((playerPos - Police.m_position).Magnitude() < 150.0f)
+		//	{
+		//		Police.bSeek = true;
+		//
+		//	}
+		//	else
+		//	{
+		//		Police.bSeek = false;
+		//
+		//		
+		//
+		//		//	pGraph->ActivateDijkstras = true;
+		//		Police.m_force += (Path[k] - Police.m_position).Normalised() * 50 * deltaTime;
+		//
+		//		////////////-----------------------< Check if at Final Node >-----------------------////////////
+		//		if (pGraph->ClosestNode(Police.m_position) == pGraph->ClosestNode(Path[Path.size() - 1]))
+		//		{
+		//			k = 0;
+		//		}
+		//		////////////----------------------< Move to next Node in Path >----------------------////////////
+		//		if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(Police.m_position))
+		//		{
+		//			k++;
+		//		}
+		//	}
 
 
 #pragma region	//----------------< Show the closest Nodes >-------------------//
-	for (int i = 0; i < pGraph->nodes.size(); i++)
-	{
-		pGraph->nodes[i]->closeNode = false;
-	}
-	for (int i = 0; i < pGraph->ClosestNode(playerPos)->edges.size(); i++)
-	{
-		pGraph->ClosestNode(playerPos)->closeNode = true;
-		pGraph->ClosestNode(playerPos)->edges[i]->end->closeNode = true;
-	}
+		for (int i = 0; i < pGraph->nodes.size(); i++)
+		{
+			pGraph->nodes[i]->closeNode = false;
+		}
+		for (int i = 0; i < pGraph->ClosestNode(playerPos)->edges.size(); i++)
+		{
+			pGraph->ClosestNode(playerPos)->closeNode = true;
+			pGraph->ClosestNode(playerPos)->edges[i]->end->closeNode = true;
+		}
 #pragma endregion
 
 #pragma region	//----------------< Reset Pos of Pedestrians >-------------------//
-	if (InputManager->WasKeyPressed(GLFW_KEY_R))
-	{
-		for (int i = 0; i < agent.size(); i++)
+		if (InputManager->WasKeyPressed(GLFW_KEY_R))
 		{
-			agent[i]->m_position = pGraph->SafeRandPos();
+			for (int i = 0; i < agent.size(); i++)
+			{
+				agent[i]->m_position = pGraph->SafeRandPos();
+			}
 		}
-	}
 #pragma endregion
-	// Dijkstras
-	/*
-	#pragma region	//----------------< Dijkstras >-------------------//
+		// Dijkstras
+		/*
+		#pragma region	//----------------< Dijkstras >-------------------//
 
-	//agent[0]->m_position += (agent[0]->m_velocity - agent[0]->m_position).Normalised() * 10 * deltaTime;
-	if (pGraph->ActivateDijkstras == true)
-	{
-
-	Police.m_position += (Path[k] - Police.m_position).Normalised() * 100 * deltaTime;
-	////////////-----------------------< Check if at Final Node >-----------------------////////////
-	if (pGraph->ClosestNode(Police.m_position) == pGraph->ClosestNode(Path[Path.size() - 1]))
-	{
-	pGraph->ActivateDijkstras = false;
-	k = 0;
-
-	Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(playerPos));
-	}
-	////////////----------------------< Move to next Node in Path >----------------------////////////
-	if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(Police.m_position))
-	{
-	k++;
-	}
-	////////////----------------------------< Re-Path >----------------------////////////
-
-	if (k == 5)
-	{
-	Path = pGraph->Dijkstras(pGraph->ClosestNode(policePos), pGraph->ClosestNode(playerPos));
-	k = 0;
-	}
-	}
-	#pragma endregion
-	*/ 
-
-	/*
-#pragma region //----------------< Steering >-------------------//
-	Vector2 upVec = Vector2(playerMat.a12, playerMat.a11);
-	Vector2 normVec = upVec.Normalised();
-
-	if (InputManager->IsKeyDown(GLFW_KEY_UP))
-	{
-		//--------Move Foward
-		if (pGraph->ClosestNode(playerPos)->traversable == true)
+		//agent[0]->m_position += (agent[0]->m_velocity - agent[0]->m_position).Normalised() * 10 * deltaTime;
+		if (pGraph->ActivateDijkstras == true)
 		{
-			playerPos -= upVec * 300.0f * deltaTime;
+
+		Police.m_position += (Path[k] - Police.m_position).Normalised() * 100 * deltaTime;
+		////////////-----------------------< Check if at Final Node >-----------------------////////////
+		if (pGraph->ClosestNode(Police.m_position) == pGraph->ClosestNode(Path[Path.size() - 1]))
+		{
+		pGraph->ActivateDijkstras = false;
+		k = 0;
+
+		Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(playerPos));
+		}
+		////////////----------------------< Move to next Node in Path >----------------------////////////
+		if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(Police.m_position))
+		{
+		k++;
+		}
+		////////////----------------------------< Re-Path >----------------------////////////
+
+		if (k == 5)
+		{
+		Path = pGraph->Dijkstras(pGraph->ClosestNode(policePos), pGraph->ClosestNode(playerPos));
+		k = 0;
+		}
+		}
+		#pragma endregion
+		*/
+
+
+#pragma region //----------------< Steering >-------------------//
+		Vector2 upVec = Vector2(playerMat.a12, playerMat.a11);
+		Vector2 normVec = upVec.Normalised();
+
+		if (InputManager->IsKeyDown(GLFW_KEY_UP))
+		{
+			//--------Move Foward
+			if (pGraph->ClosestNode(playerPos)->traversable == true)
+			{
+				playerPos -= upVec * 300.0f * deltaTime;
+
+				if (InputManager->IsKeyDown(GLFW_KEY_LEFT))
+				{
+					//--------Rotate Limo Left
+					rotate -= 4 * deltaTime;
+				}
+				if (InputManager->IsKeyDown(GLFW_KEY_RIGHT))
+				{
+					//--------Rotate Limo Right
+					rotate += 4 * deltaTime;
+				}
+			}
+		}
+		if (InputManager->IsKeyDown(GLFW_KEY_DOWN))
+		{
+			//--------Move Back
+			playerPos += upVec * 150.0f * deltaTime;
 
 			if (InputManager->IsKeyDown(GLFW_KEY_LEFT))
 			{
 				//--------Rotate Limo Left
-				rotate -= 4 * deltaTime;
+				rotate += 2 * deltaTime;
 			}
 			if (InputManager->IsKeyDown(GLFW_KEY_RIGHT))
 			{
 				//--------Rotate Limo Right
-				rotate += 4 * deltaTime;
+				rotate -= 2 * deltaTime;
 			}
 		}
-	}
-	if (InputManager->IsKeyDown(GLFW_KEY_DOWN))
-	{
-		//--------Move Back
-		playerPos += upVec * 150.0f * deltaTime;
 
-		if (InputManager->IsKeyDown(GLFW_KEY_LEFT))
-		{
-			//--------Rotate Limo Left
-			rotate += 2 * deltaTime;
-		}
-		if (InputManager->IsKeyDown(GLFW_KEY_RIGHT))
-		{
-			//--------Rotate Limo Right
-			rotate -= 2 * deltaTime;
-		}
-	}
-
-	Vector3 playerPosV3(playerPos.x, playerPos.y, 1.0f);
+		Vector3 playerPosV3(playerPos.x, playerPos.y, 1.0f);
 
 
-	playerMat = playerMat.Translation(playerPosV3) *  playerMat.Rotation(rotate) * playerMat.Scale(scale);
+		playerMat = playerMat.Translation(playerPosV3) *  playerMat.Rotation(rotate) * playerMat.Scale(scale);
 
 #pragma endregion
-	*/
+
 #pragma region //----------------< Blood Trail >-------------------//
 
-	if (bBloodTrail)
-	{
-		if (fTimer > 0.01)
+		if (bBloodTrail)
 		{
-
-			if (counter > 10)
+			if (fTimer > 0.01)
 			{
+
+				if (counter > 10)
 				{
-					blood[counter2]->Pos = Vector2(-10.0f, -10.0f);
-					counter2++;
+					{
+						blood[counter2]->Pos = Vector2(-10.0f, -10.0f);
+						counter2++;
+
+					}
+					if (counter2 > 10)
+					{
+						counter = 0;
+						counter2 = 0;
+						bBloodTrail = false;
+					}
 
 				}
-				if (counter2 > 10)
+				else
 				{
-					counter = 0;
-					counter2 = 0;
-					bBloodTrail = false;
+					blood[counter]->Pos.x = playerPos.x;
+					blood[counter]->Pos.y = playerPos.y;
+					counter++;
 				}
 
+				fTimer = 0;
 			}
 			else
 			{
-				blood[counter]->Pos.x = playerPos.x;
-				blood[counter]->Pos.y = playerPos.y;
-				counter++;
+				fTimer += deltaTime;
 			}
-
-			fTimer = 0;
 		}
-		else
-		{
-			fTimer += deltaTime;
-		}
-	}
 #pragma endregion
+	}
 }
 void Game1::Draw()//-------------------------------------------------------------------------------------------------------------------------------------------//
 {
@@ -456,11 +473,10 @@ void Game1::Draw()//------------------------------------------------------------
 	////////////--------------------------< Draw Police >-------------------------////2////////
 	m_spritebatch->DrawSprite(policeTex, Police.m_position.x, Police.m_position.y, 10.0f, 10.0f);
 
-
-
 	//m_spritebatch->DrawSpriteTransformed3x3(playerTex, player.m_playerMat.GetMatrix(), 25.0f, 75.0f);
 
-
+	if (pause)
+		m_spritebatch->DrawSprite(pauseTex, 600.0f, 400.0f, 1200.0f, 250.0f);
 
 	m_spritebatch->End();
 

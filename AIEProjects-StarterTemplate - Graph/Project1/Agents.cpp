@@ -19,6 +19,8 @@ Agents::Agents()
 
 	bAlive = true;
 
+	int eState = 0;
+
 }
 
 
@@ -36,23 +38,30 @@ void Agents::Update(float deltaTime)
 	//if (m_position.x > 1160 || m_position.y > 760 || m_position.x < 0 || m_position.y < 0)
 	//	m_force -= m_behaviours[behaviour]->Update(this);
 	//else
-	{
-		switch (1)
+	
+		switch (eState)
 		{
-		case 0:
+		case 0: // Wander
 			m_acceleration = Vector2(5.0f, 5.0f);
 			m_force += m_behaviours[0]->Update(this);
+			if ((m_position - *player).Magnitude() < 100.0f)
+			{
+				eState = 1;
+			}
+
+
 			break;
-		case 1:
+		case 1: // Flee
 			m_acceleration = Vector2(8.0f, 8.0f);
 			m_force += m_behaviours[1]->Update(this);
+			if ((m_position - *player).Magnitude() > 100.0f)
+			{
+				eState = 0;
+			}
 			break;
-		case 2:
-			m_acceleration = Vector2(8.0f, 8.0f);
-			m_force += m_behaviours[2]->Update(this);
-			break;
+
 		}
-	}
+	
 	m_position += ((m_velocity + m_force)) * m_acceleration * deltaTime;
 
 }

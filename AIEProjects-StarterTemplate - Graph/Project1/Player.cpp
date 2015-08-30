@@ -21,7 +21,9 @@ Player::~Player()
 }
 
 void Player::Update(float deltaTime, Input* input)
+
 {
+/*
 	Input * InputManager;
 
 	Vector2 upVec = Vector2(m_playerMat.a12, m_playerMat.a11);
@@ -67,6 +69,6 @@ void Player::Update(float deltaTime, Input* input)
 
 
 	m_playerMat = m_playerMat.Translation(playerPosV3) *  m_playerMat.Rotation(rotate) * m_playerMat.Scale(scale);
-
+	*/
 
 }

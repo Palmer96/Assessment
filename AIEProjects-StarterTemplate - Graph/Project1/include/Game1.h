@@ -42,6 +42,8 @@ protected:
 	Texture * roadTex;
 	Texture * roofTex;
 	Texture * bloodTex;
+	Texture * pauseTex;
+
 
 
 	std::vector <Vector2> Path;
@@ -79,7 +81,7 @@ protected:
 	
 
 	bool bBloodTrail;
-
+	bool pause;
 
 private:
 };
