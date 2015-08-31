@@ -23,7 +23,6 @@ public:
 
 
 	Wander* wander;
-	Seek* seek;
 	Flee* flee;
 
 	Vector2* player;

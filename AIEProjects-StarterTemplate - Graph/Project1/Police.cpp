@@ -4,8 +4,8 @@
 Police::Police()
 {
 	m_position = Vector2(50.0f, 50.0f);
-	m_acceleration = Vector2(5.0f, 5.0f);
-	m_velocity = Vector2(0.0000000001f, 0.0000000001f);
+//	m_acceleration = Vector2(5.0f, 5.0f);
+	m_velocity = Vector2(0.00001f, 0.00001f);
 	//m_force = Vector2(500.0f, 200.0f);
 	wander = new Wander();
 	seek = new Seek();
@@ -37,20 +37,22 @@ void Police::Update(float deltaTime)
 		case 0: // Wander
 			m_acceleration = Vector2(5.0f, 5.0f);
 			m_force += m_behaviours[0]->Update(this);
-			if ((Player->m_position - m_position).Magnitude() < 150.0f)
+			//if ((m_position - *m_player).Magnitude() < 150.0f)
+			if ((m_position - m_player).Magnitude() < 200.0f)
 			{
 				eState = 1;
 			}
-			else if (someOneDied)
-			{
-				someOneDied = false;
-				eState = 2;
-			}
+		//	else if (someOneDied)
+		//	{
+		//		someOneDied = false;
+		//		eState = 2;
+		//	}
 			break;
 		case 1: // Seek
-			m_acceleration = Vector2(8.0f, 8.0f);
+			seek->SetTarget(&m_player);
+			m_acceleration = Vector2(15.0f, 15.0f);
 			m_force += m_behaviours[1]->Update(this);
-			if ((Player->m_position - m_position).Magnitude() > 150.0f)
+			if ((m_position - m_player).Magnitude() > 200.0f)
 			{
 				eState = 0;
 			}
@@ -60,7 +62,7 @@ void Police::Update(float deltaTime)
 			
 			m_force = (Path[PathCounter] - m_position).Normalised() * 50 * deltaTime;
 
-			if ((Player->m_position - m_position).Magnitude() < 150)
+			if ((m_player - m_position).Magnitude() < 150)
 			{
 				eState = 1;
 			}
@@ -72,7 +74,7 @@ void Police::Update(float deltaTime)
 			break;
 		case 3: // Wait
 			m_acceleration = Vector2(0.0f, 0.0f);
-			if ((Player->m_position - m_position).Magnitude() < 150)
+			if ((m_player - m_position).Magnitude() < 150)
 			{
 				eState = 1;
 			}
@@ -88,11 +90,12 @@ void Police::Update(float deltaTime)
 			break;
 		}
 	}
+
 	m_position += ((m_velocity + m_force)) * m_acceleration * deltaTime;
 
 }
 
-void Police::SetPlayer(Agents* player)
+void Police::SetPlayer(Vector2* a_player)
 {
-	Player = player;
+	player = a_player;
 }

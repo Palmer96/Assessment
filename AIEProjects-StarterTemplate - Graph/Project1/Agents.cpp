@@ -6,20 +6,17 @@
 Agents::Agents()
 {
 	m_acceleration = Vector2(5.0f, 5.0f);
-	m_velocity = Vector2(0.0000000001f, 0.0000000001f);
+	m_velocity = Vector2(0.00001f, 0.00001f);
 	//m_force = Vector2(500.0f, 200.0f);
 	wander = new Wander();
 	flee = new Flee();
 	m_behaviours.push_back(wander);
 	m_behaviours.push_back(flee);
-	m_behaviours.push_back(seek);
-	bSeek = false;
-	bFlee = false;
 
 
 	bAlive = true;
 
-	int eState = 0;
+	eState = 0;
 
 }
 
@@ -38,7 +35,7 @@ void Agents::Update(float deltaTime)
 	//if (m_position.x > 1160 || m_position.y > 760 || m_position.x < 0 || m_position.y < 0)
 	//	m_force -= m_behaviours[behaviour]->Update(this);
 	//else
-	
+
 		switch (eState)
 		{
 		case 0: // Wander
@@ -52,17 +49,21 @@ void Agents::Update(float deltaTime)
 
 			break;
 		case 1: // Flee
-			m_acceleration = Vector2(8.0f, 8.0f);
+			flee->SetTarget(player);
+			m_acceleration = Vector2(10.0f, 10.0f);
 			m_force += m_behaviours[1]->Update(this);
 			if ((m_position - *player).Magnitude() > 100.0f)
 			{
 				eState = 0;
 			}
 			break;
-
 		}
-	
-	m_position += ((m_velocity + m_force)) * m_acceleration * deltaTime;
+
+
+		if (m_position.x > 1160 || m_position.y > 760 || m_position.x < 0 || m_position.y < 0)
+			m_position -= ((m_velocity + m_force)) * m_acceleration * deltaTime;
+		else
+			m_position += ((m_velocity + m_force)) * m_acceleration * deltaTime;
 
 }
 void Agents::Draw(Texture *personTex)

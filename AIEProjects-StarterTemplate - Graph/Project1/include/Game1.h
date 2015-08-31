@@ -70,7 +70,7 @@ protected:
 	std::vector<Blood*> blood;
 	std::vector<Agents*> agent;
 
-	std::vector<Node*> walls;
+	//std::vector<Node*> walls;
 
 	float fTimer;
 

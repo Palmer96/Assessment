@@ -10,23 +10,27 @@ public:
 	~Police();
 
 	void Update(float deltaTime);
-	void SetPlayer(Agents* player);
+	void SetPlayer(Vector2* a_player);
 
 	std::vector < Vector2 > Path;
 
-	Agents* Player;
+	Vector2 m_player;
+
+
 	Wander* wander;
 	Seek* seek;
 
 
+	std::vector < IBehaviour * > m_behaviours;
 
-	Vector2* DeadPerson;
+	Node* DeadPerson;
 	bool someOneDied;
 	//protected:
 
-	Vector2 m_position;
-	Vector2 m_velocity;
-	Vector2 m_acceleration;
+	//Vector2 m_position;
+	//Vector2 m_velocity;
+	//Vector2 m_acceleration;
+	//Vector2 m_force;
 
 	Matrix3 m_playerMat;
 

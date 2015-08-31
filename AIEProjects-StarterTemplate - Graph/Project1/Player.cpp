@@ -34,7 +34,7 @@ void Player::Update(float deltaTime, Input* input)
 		//--------Move Foward
 		//if (pGraph->ClosestNode(playerPos)->traversable == true)
 		{
-			m_position -= upVec * 300.0f * deltaTime;
+eState			m_position -= upVec * 300.0f * deltaTime;
 
 			if (InputManager->IsKeyDown(GLFW_KEY_LEFT))
 			{

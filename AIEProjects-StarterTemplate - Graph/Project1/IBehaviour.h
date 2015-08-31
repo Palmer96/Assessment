@@ -16,13 +16,8 @@ public:
 
 class Seek : public IBehaviour
 {
-	
-
-
 public:
 	Vector2* target;
-
-
 	Vector2 Update(Agents* agent);
 	void SetTarget(Vector2* target);
 
@@ -30,9 +25,6 @@ public:
 
 class Flee : public IBehaviour
 {
-	
-
-
 public:
 	Vector2* target;
 	Vector2 Update(Agents* agent);
