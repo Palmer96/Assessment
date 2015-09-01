@@ -42,11 +42,11 @@ void Police::Update(float deltaTime)
 			{
 				eState = 1;
 			}
-		//	else if (someOneDied)
-		//	{
-		//		someOneDied = false;
-		//		eState = 2;
-		//	}
+			else if (someOneDied)
+			{
+				someOneDied = false;
+				eState = 2;
+			}
 			break;
 		case 1: // Seek
 			seek->SetTarget(&m_player);
@@ -58,27 +58,32 @@ void Police::Update(float deltaTime)
 			}
 			break;
 		case 2: // Path
-			m_acceleration = Vector2(8.0f, 8.0f);
-			
-			m_force = (Path[PathCounter] - m_position).Normalised() * 50 * deltaTime;
+			m_acceleration = Vector2(100.0f, 100.0f);
+			someOneDied = false;
+			m_force = (Path[PathCounter] - m_position).Normalised() * 100 * deltaTime;
+			if ((Path[PathCounter] - m_position).Magnitude() < 10.0f)
+			{
+				PathCounter++;
+			}
 
 			if ((m_player - m_position).Magnitude() < 150)
 			{
 				eState = 1;
 			}
-			else if (PathCounter == Path.size())
+			else if (PathCounter == Path.size()-1)
 			{
+				eState = 3;
 				PathCounter = 0;
-				eState = 0;
 			}
 			break;
 		case 3: // Wait
 			m_acceleration = Vector2(0.0f, 0.0f);
+			m_force = Vector2(0.0f, 0.0f);
 			if ((m_player - m_position).Magnitude() < 150)
 			{
 				eState = 1;
 			}
-			else if (counter == 10)
+			else if (counter == 100)
 			{
 				eState = 0;
 				counter = 0;

@@ -156,6 +156,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 
 	////////////----------------------------< Make First Path >----------------------////////////
 	Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(playerPos));
+	Police.Path = Path;
 	pause = true;
 }
 
@@ -168,12 +169,19 @@ Game1::~Game1()//---------------------------------------------------------------
 void Game1::Update(float deltaTime)//-------------------------------------------------------------------------------------------------------------------------------------------//
 {
 	Input * InputManager = GetInput();
-
-	for (int i = 0; i < Path.size() - 1; i++)
+	if (!Police.someOneDied)
 	{
-		Police.Path.push_back(Path[i]);
+		for (int i = 0; i < agent.size(); i++)
+		{
+			if ((playerPos - agent[i]->m_position).Magnitude() < 10.0f)
+			{
+				Police.someOneDied = true;
+				//Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
+				//Police.Path = Path;
+				Police.Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
+			}
+		}
 	}
-
 	if (InputManager->WasKeyPressed(GLFW_KEY_SPACE))
 	{
 		if (pause)

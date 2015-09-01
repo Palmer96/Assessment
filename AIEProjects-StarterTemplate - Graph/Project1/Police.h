@@ -17,7 +17,7 @@ public:
 	Vector2 m_player;
 
 
-	Wander* wander;
+	//Wander* wander;
 	Seek* seek;
 
 
@@ -34,7 +34,7 @@ public:
 
 	Matrix3 m_playerMat;
 
-	int eState;
+	//int eState;
 	int counter;
 	int PathCounter;
 };
