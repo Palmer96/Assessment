@@ -38,6 +38,8 @@ Vector2 Wander::Update(Agents* agent)
 	circle = circle.VecFlo(circle, distance);
 
 	//srand(time(NULL));
+
+
 	int angle = rand();
 
 	displacement.x = cos(angle) * radius;

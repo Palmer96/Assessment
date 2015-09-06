@@ -37,7 +37,6 @@ void Police::Update(float deltaTime)
 		case 0: // Wander
 			m_acceleration = Vector2(5.0f, 5.0f);
 			m_force += m_behaviours[0]->Update(this);
-			//if ((m_position - *m_player).Magnitude() < 150.0f)
 			if ((m_position - m_player).Magnitude() < 200.0f)
 			{
 				eState = 1;
@@ -59,13 +58,16 @@ void Police::Update(float deltaTime)
 			break;
 		case 2: // Path
 			m_acceleration = Vector2(100.0f, 100.0f);
+			if (someOneDied == true)
+			{
 			someOneDied = false;
-			m_force = (Path[PathCounter] - m_position).Normalised() * 100 * deltaTime;
+			}
+			m_force += (Path[PathCounter] - m_position).Normalised() * 100 * deltaTime;
 			if ((Path[PathCounter] - m_position).Magnitude() < 10.0f)
 			{
 				PathCounter++;
 			}
-
+	
 			if ((m_player - m_position).Magnitude() < 150)
 			{
 				eState = 1;
@@ -87,7 +89,7 @@ void Police::Update(float deltaTime)
 			{
 				eState = 0;
 				counter = 0;
-			}
+			} 
 			else
 			{
 				counter++;

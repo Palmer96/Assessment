@@ -50,7 +50,7 @@ void Agents::Update(float deltaTime)
 			break;
 		case 1: // Flee
 			flee->SetTarget(player);
-			m_acceleration = Vector2(1.0f, 1.0f);
+			m_acceleration = Vector2(10.0f, 10.0f);
 			m_force += m_behaviours[1]->Update(this);
 			if ((m_position - *player).Magnitude() > 100.0f)
 			{

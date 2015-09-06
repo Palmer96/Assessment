@@ -74,7 +74,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Project1\;$(SolutionDir)AIE_GL\include\;$(SolutionDir)libraries\glfw3\include\GLFW\;$(SolutionDir)libraries\glew\include\;$(ProjectDir)include\;$(SolutionDir)libraries\glm\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Project1\;$(SolutionDir)AIE_GL\include\;$(SolutionDir)libraries\glfw3\include\GLFW\;$(SolutionDir)libraries\glew\include\GL\;$(ProjectDir)include\;$(SolutionDir)libraries\glm\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

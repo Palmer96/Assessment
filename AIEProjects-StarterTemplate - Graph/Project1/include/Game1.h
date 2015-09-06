@@ -43,7 +43,7 @@ protected:
 	Texture * roofTex;
 	Texture * bloodTex;
 	Texture * pauseTex;
-
+	Texture * pathchaseTex;
 
 
 	std::vector <Vector2> Path;
@@ -57,6 +57,8 @@ protected:
 
 	Vector2 playerPos;
 	Matrix3 playerMat;
+
+	Vector2 pathChaser;
 
 	float rotate;
 	Vector3 scale;

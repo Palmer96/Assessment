@@ -98,7 +98,9 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	roadTex = new Texture("./Images/Road.png");
 	roofTex = new Texture("./Images/Roof.png");
 	bloodTex = new Texture("./Images/Blood.png");
+	pathchaseTex = new Texture("./Images/Blood.png");
 
+	pathChaser = Vector2(30.0f, 30.0f);
 	pauseTex = new Texture("./Images/pause-banner.png");
 
 	playerPos = Vector2(600.0f, 400.0f);
@@ -145,7 +147,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 #pragma endregion
 
 #pragma region	//----------------< Create random Pedestrians >-------------------//
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 1000; i++)
 	{
 		agent.push_back(new Agents);
 		agent[i]->m_position = pGraph->SafeRandPos();
@@ -169,19 +171,27 @@ Game1::~Game1()//---------------------------------------------------------------
 void Game1::Update(float deltaTime)//-------------------------------------------------------------------------------------------------------------------------------------------//
 {
 	Input * InputManager = GetInput();
+
 	if (!Police.someOneDied)
 	{
 		for (int i = 0; i < agent.size(); i++)
 		{
 			if ((playerPos - agent[i]->m_position).Magnitude() < 10.0f)
 			{
+				//	Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
 				Police.someOneDied = true;
-				//Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
-				//Police.Path = Path;
-				Police.Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
+				bBloodTrail = true;
+				counter - 1;
+				//counter2 = 0;
+				Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
+				Police.Path = Path;
+				//	Police.Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
 			}
 		}
 	}
+
+
+
 	if (InputManager->WasKeyPressed(GLFW_KEY_SPACE))
 	{
 		if (pause)
@@ -191,7 +201,20 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 	}
 
 	if (!pause)
-	{		
+	{
+
+	//	pathChaser += (Path[k] - pathChaser).Normalised() * 100 * deltaTime;
+	//	if ((pGraph->ClosestNode(pathChaser) - pGraph->ClosestNode(Path[k])))
+	//	{
+	//		k++;
+	//	}
+	//	if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(Path[Path.size() - 1]))
+	//	{
+	//		Path = pGraph->Dijkstras(pGraph->nodes[rand() % 2000 + 100], pGraph->nodes[rand() % 2000 + 100]);
+	//		k = 0;
+	//	}
+
+
 		for (int i = 0; i < agent.size(); i++)
 		{
 			agent[i]->Update(deltaTime);
@@ -199,7 +222,13 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 		Police.m_player = playerPos;
 		//	Police.seek->SetTarget(&playerPos);
 		//	Police.SetPlayer(&playerPos);
-			Police.Update(deltaTime);
+
+
+		if (Police.someOneDied)
+		{
+
+		}
+		Police.Update(deltaTime);
 
 
 
@@ -216,37 +245,31 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 		}
 #pragma endregion
 		// Dijkstras
-		/*
+		/* /////////////////////////////////////////////////////////////////////////////////////////////////////////
 		#pragma region	//----------------< Dijkstras >-------------------//
 
 		//agent[0]->m_position += (agent[0]->m_velocity - agent[0]->m_position).Normalised() * 10 * deltaTime;
-		if (pGraph->ActivateDijkstras == true)
+		//if (pGraph->ActivateDijkstras == true)
 		{
 
-		Police.m_position += (Path[k] - Police.m_position).Normalised() * 100 * deltaTime;
+			pathChaser += (Path[k] - pathChaser).Normalised() * 100 * deltaTime;
 		////////////-----------------------< Check if at Final Node >-----------------------////////////
-		if (pGraph->ClosestNode(Police.m_position) == pGraph->ClosestNode(Path[Path.size() - 1]))
+			if (pGraph->ClosestNode(pathChaser) == pGraph->ClosestNode(Path[Path.size() - 1]))
 		{
 		pGraph->ActivateDijkstras = false;
 		k = 0;
 
-		Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(playerPos));
+		Path = pGraph->Dijkstras(pGraph->ClosestNode(pathChaser), pGraph->ClosestNode(pGraph->SafeRandPos()));
 		}
 		////////////----------------------< Move to next Node in Path >----------------------////////////
-		if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(Police.m_position))
+			if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(pathChaser))
 		{
 		k++;
 		}
-		////////////----------------------------< Re-Path >----------------------////////////
 
-		if (k == 5)
-		{
-		Path = pGraph->Dijkstras(pGraph->ClosestNode(policePos), pGraph->ClosestNode(playerPos));
-		k = 0;
-		}
 		}
 		#pragma endregion
-		*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 
 		//		////////////-----------------------< Check if at Final Node >-----------------------////////////
 		//		if (pGraph->ClosestNode(Police.m_position) == pGraph->ClosestNode(Path[Path.size() - 1]))
@@ -258,7 +281,7 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 		//		{
 		//			k++;
 		//		}
-
+		*/
 #pragma region //----------------< Steering >-------------------//
 		Vector2 upVec = Vector2(playerMat.a12, playerMat.a11);
 		Vector2 normVec = upVec.Normalised();
@@ -307,9 +330,11 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 #pragma endregion
 
 #pragma region //----------------< Blood Trail >-------------------//
-
+		if (InputManager->IsKeyDown(GLFW_KEY_B))
+			bBloodTrail = true;
 		if (bBloodTrail)
 		{
+			Police.someOneDied = false;
 			if (fTimer > 0.01)
 			{
 
@@ -410,6 +435,8 @@ void Game1::Draw()//------------------------------------------------------------
 
 	if (pause)
 		m_spritebatch->DrawSprite(pauseTex, 600.0f, 400.0f, 1200.0f, 250.0f);
+
+	m_spritebatch->DrawSprite(pathchaseTex, pathChaser.x, pathChaser.y, 20.0f, 20.0f);
 
 	m_spritebatch->End();
 
