@@ -144,6 +144,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 
 	counter = 0;
 	counter2 = 0;
+	pause = true;
 #pragma endregion
 
 #pragma region	//----------------< Create random Pedestrians >-------------------//
@@ -156,10 +157,6 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	bBloodTrail = false;
 #pragma endregion
 
-	////////////----------------------------< Make First Path >----------------------////////////
-	Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(playerPos));
-	Police.Path = Path;
-	pause = true;
 }
 
 Game1::~Game1()//-------------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -172,7 +169,7 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 {
 	Input * InputManager = GetInput();
 
-	if (!Police.someOneDied)
+	if (Police.someOneDied == false)
 	{
 		for (int i = 0; i < agent.size(); i++)
 		{
@@ -181,11 +178,11 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 				//	Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
 				Police.someOneDied = true;
 				bBloodTrail = true;
-				counter - 1;
-				//counter2 = 0;
+				//counter - 1;
 				Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
 				Police.Path = Path;
-				//	Police.Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
+				Police.PathCounter = 0;
+
 			}
 		}
 	}
@@ -200,40 +197,7 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 			pause = true;
 	}
 
-	if (!pause)
-	{
-
-	//	pathChaser += (Path[k] - pathChaser).Normalised() * 100 * deltaTime;
-	//	if ((pGraph->ClosestNode(pathChaser) - pGraph->ClosestNode(Path[k])))
-	//	{
-	//		k++;
-	//	}
-	//	if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(Path[Path.size() - 1]))
-	//	{
-	//		Path = pGraph->Dijkstras(pGraph->nodes[rand() % 2000 + 100], pGraph->nodes[rand() % 2000 + 100]);
-	//		k = 0;
-	//	}
-
-
-		for (int i = 0; i < agent.size(); i++)
-		{
-			agent[i]->Update(deltaTime);
-		}
-		Police.m_player = playerPos;
-		//	Police.seek->SetTarget(&playerPos);
-		//	Police.SetPlayer(&playerPos);
-
-
-		if (Police.someOneDied)
-		{
-
-		}
-		Police.Update(deltaTime);
-
-
-
-
-
+	
 
 #pragma region	//----------------< Reset Pos of Pedestrians >-------------------//
 		if (InputManager->WasKeyPressed(GLFW_KEY_R))
@@ -244,44 +208,7 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 			}
 		}
 #pragma endregion
-		// Dijkstras
-		/* /////////////////////////////////////////////////////////////////////////////////////////////////////////
-		#pragma region	//----------------< Dijkstras >-------------------//
 
-		//agent[0]->m_position += (agent[0]->m_velocity - agent[0]->m_position).Normalised() * 10 * deltaTime;
-		//if (pGraph->ActivateDijkstras == true)
-		{
-
-			pathChaser += (Path[k] - pathChaser).Normalised() * 100 * deltaTime;
-		////////////-----------------------< Check if at Final Node >-----------------------////////////
-			if (pGraph->ClosestNode(pathChaser) == pGraph->ClosestNode(Path[Path.size() - 1]))
-		{
-		pGraph->ActivateDijkstras = false;
-		k = 0;
-
-		Path = pGraph->Dijkstras(pGraph->ClosestNode(pathChaser), pGraph->ClosestNode(pGraph->SafeRandPos()));
-		}
-		////////////----------------------< Move to next Node in Path >----------------------////////////
-			if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(pathChaser))
-		{
-		k++;
-		}
-
-		}
-		#pragma endregion
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-
-		//		////////////-----------------------< Check if at Final Node >-----------------------////////////
-		//		if (pGraph->ClosestNode(Police.m_position) == pGraph->ClosestNode(Path[Path.size() - 1]))
-		//		{
-		//			k = 0;
-		//		}
-		//		////////////----------------------< Move to next Node in Path >----------------------////////////
-		//		if (pGraph->ClosestNode(Path[k]) == pGraph->ClosestNode(Police.m_position))
-		//		{
-		//			k++;
-		//		}
-		*/
 #pragma region //----------------< Steering >-------------------//
 		Vector2 upVec = Vector2(playerMat.a12, playerMat.a11);
 		Vector2 normVec = upVec.Normalised();
@@ -326,6 +253,20 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 
 
 		playerMat = playerMat.Translation(playerPosV3) *  playerMat.Rotation(rotate) * playerMat.Scale(scale);
+
+#pragma endregion
+
+#pragma region	//---------------------------< Update >--------------------------//  
+if (!pause)
+	{
+
+		for (int i = 0; i < agent.size(); i++)
+		{
+			agent[i]->Update(deltaTime);
+		}
+
+		Police.m_player = playerPos;
+		Police.Update(deltaTime);
 
 #pragma endregion
 
@@ -396,16 +337,17 @@ void Game1::Draw()//------------------------------------------------------------
 		m_spritebatch->SetRenderColor(255, 255, 255, 255);
 	}
 #pragma endregion
-
+	if (Police.someOneDied == true)
+	{
 #pragma region	//----------------< Draw Dijkstras >-------------------//
 
-	m_spritebatch->SetRenderColor(0, 0, 0, 100);
-	for (int i = 0; i < Path.size() - 1; i++)
-	{
-		m_spritebatch->DrawLine(Path[i].x, Path[i].y, Path[i + 1].x, Path[i + 1].y, 5.0f);
-	}
+		m_spritebatch->SetRenderColor(0, 0, 0, 100);
+		for (int i = 0; i < Path.size() - 1; i++)
+		{
+			m_spritebatch->DrawLine(Path[i].x, Path[i].y, Path[i + 1].x, Path[i + 1].y, 5.0f);
+		}
 #pragma endregion
-
+	}
 #pragma region	//----------------< Draw Blood Trail >-------------------//
 	m_spritebatch->SetRenderColor(200, 0, 0, 255);
 	for (int i = 0; i < blood.size(); i++)
@@ -435,8 +377,6 @@ void Game1::Draw()//------------------------------------------------------------
 
 	if (pause)
 		m_spritebatch->DrawSprite(pauseTex, 600.0f, 400.0f, 1200.0f, 250.0f);
-
-	m_spritebatch->DrawSprite(pathchaseTex, pathChaser.x, pathChaser.y, 20.0f, 20.0f);
 
 	m_spritebatch->End();
 
