@@ -175,10 +175,8 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 		{
 			if ((playerPos - agent[i]->m_position).Magnitude() < 10.0f)
 			{
-				//	Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
 				Police.someOneDied = true;
 				bBloodTrail = true;
-				//counter - 1;
 				Path = pGraph->Dijkstras(pGraph->ClosestNode(Police.m_position), pGraph->ClosestNode(agent[i]->m_position));
 				Police.Path = Path;
 				Police.PathCounter = 0;
@@ -207,6 +205,20 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 				agent[i]->m_position = pGraph->SafeRandPos();
 			}
 		}
+#pragma endregion
+
+#pragma region	//---------------------------< Update >--------------------------//  
+if (!pause)
+	{
+
+		for (int i = 0; i < agent.size(); i++)
+		{
+			agent[i]->Update(deltaTime);
+		}
+
+		Police.m_player = playerPos;
+		Police.Update(deltaTime);
+
 #pragma endregion
 
 #pragma region //----------------< Steering >-------------------//
@@ -256,19 +268,7 @@ void Game1::Update(float deltaTime)//-------------------------------------------
 
 #pragma endregion
 
-#pragma region	//---------------------------< Update >--------------------------//  
-if (!pause)
-	{
 
-		for (int i = 0; i < agent.size(); i++)
-		{
-			agent[i]->Update(deltaTime);
-		}
-
-		Police.m_player = playerPos;
-		Police.Update(deltaTime);
-
-#pragma endregion
 
 #pragma region //----------------< Blood Trail >-------------------//
 		if (InputManager->IsKeyDown(GLFW_KEY_B))
@@ -337,8 +337,7 @@ void Game1::Draw()//------------------------------------------------------------
 		m_spritebatch->SetRenderColor(255, 255, 255, 255);
 	}
 #pragma endregion
-	if (Police.someOneDied == true)
-	{
+
 #pragma region	//----------------< Draw Dijkstras >-------------------//
 
 		m_spritebatch->SetRenderColor(0, 0, 0, 100);
@@ -347,7 +346,7 @@ void Game1::Draw()//------------------------------------------------------------
 			m_spritebatch->DrawLine(Path[i].x, Path[i].y, Path[i + 1].x, Path[i + 1].y, 5.0f);
 		}
 #pragma endregion
-	}
+
 #pragma region	//----------------< Draw Blood Trail >-------------------//
 	m_spritebatch->SetRenderColor(200, 0, 0, 255);
 	for (int i = 0; i < blood.size(); i++)

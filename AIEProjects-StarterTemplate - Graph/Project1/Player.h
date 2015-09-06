@@ -2,8 +2,6 @@
 #include "Agents.h"
 #include "Input.h"
 
-
-
 class Player //: public Agents
 {
 public:
